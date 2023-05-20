@@ -46,10 +46,9 @@ export default function Onboarding({navigation}) {
               fontSize: 15,
               color: '#fff',
               textAlign: 'center',
-              marginHorizontal: 30,
+              marginHorizontal: 20,
             }}>
-            Lorem ipsum is placeholder text commonly used in the graphic, print,
-            and publishing industries for previewing layouts and visual mockups
+           Stay connected with our Smart Transport System app! Track buses in real-time, get accurate arrival times, and never miss a ride.
           </Text>
           <View
             style={{

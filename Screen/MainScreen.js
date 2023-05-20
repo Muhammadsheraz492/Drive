@@ -10,22 +10,52 @@ import {
   Animated,
   Modal,
   Button,
+  Pressable
 } from 'react-native';
 import React, {useEffect} from 'react';
 import axios from 'axios';
-import url from "../url.json"
-
+import url from '../url.json';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function MainScreen({navigation}) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [sec, setSec] = React.useState();
   const [search, setsearch] = React.useState();
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [data, setdata] = React.useState();
+  const [storedUsername, setStoredUsername] = React.useState('');
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
+  const retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('userstatus');
+      if (value !== null) {
+        // console.log(value);
+        setStoredUsername(JSON.parse(value).username);
+          // AsyncStorage.setItem('userstatus', '');
 
+      }
+    } catch (error) {
+      console.log('Error retrieving data: ', error);
+    }
+  };
+  const sessionnull = async () => {
+    try {
+      // const value = await AsyncStorage.setItem('userstatus', '');
+      // if (value !== null) {
+        // console.log(value);
+        // setStoredUsername(JSON.parse(value).username);
+        AsyncStorage.removeItem('userstatus');
+        navigation.navigate("Login")
+          
+
+
+      // }
+    } catch (error) {
+      console.log('Error session null : ', error);
+    }
+  };
   useEffect(() => {
     const options = {
       method: 'GET',
@@ -36,6 +66,7 @@ export default function MainScreen({navigation}) {
       .request(options)
       .then(function (response) {
         // console.log(response.data);
+        retrieveData();
         setdata(response.data.message);
       })
       .catch(function (error) {
@@ -197,20 +228,6 @@ export default function MainScreen({navigation}) {
       </Modal>
     );
   };
-  // const data = [
-  //   {
-  //     routename: 'Route Name',
-  //     Busno: '21',
-  //     schedule: [
-  //       {
-  //         morningto: '7:00 AM',
-  //         morning: '2:00 PM',
-  //         eveningto: '12:00 PM',
-  //         evening: '8:00 PM',
-  //       },
-  //     ],
-  //   },
-  // ];
 
   return (
     <View
@@ -243,7 +260,7 @@ export default function MainScreen({navigation}) {
               fontWeight: 'bold',
               color: '#000000',
             }}>
-            Hi,Username
+            Hi,{storedUsername}
           </Text>
           <TouchableOpacity
             style={
@@ -374,12 +391,7 @@ export default function MainScreen({navigation}) {
                 <View>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate('Map', {
-                        // morning: item.schedule.morning,
-                        // morningto: item.schedule.morningto,
-                        // evening: item.schedule.evening,
-                        // eveningto: item.schedule.eveningto,
-                      });
+                      navigation.navigate('Map', {});
                     }}>
                     <Text
                       style={{
@@ -398,7 +410,7 @@ export default function MainScreen({navigation}) {
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity
-                disabled={true}
+                  disabled={true}
                   onPress={() => {
                     // toggleModal();
                   }}>
@@ -419,6 +431,81 @@ export default function MainScreen({navigation}) {
             </View>
           )}
         />
+        <View
+          style={{
+            height: 70,
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            backgroundColor: '#FFB800',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            flexDirection: 'row',
+            // alignSelf:"center"
+          }}>
+          <Pressable
+            style={{
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              // toggleModal();
+              navigation.navigate("MainScreen")
+            }}
+            >
+
+
+            <ImageBackground
+              source={require('../assest/home.png')}
+              style={{
+                // marginTop: 5,
+                width: 20,
+                height: 20,
+              }}></ImageBackground>
+            <Text
+              style={{
+                color: '#000000',
+                // backgroundColor:"#fff"
+              }}>
+              Home
+            </Text>
+          </Pressable>
+          <Pressable
+           onPress={() => {
+            // toggleModal();
+            navigation.navigate("Profile")
+
+          }}
+            style={{
+              alignItems: 'center',
+              // justifyContent:"center"
+            }}>
+            <ImageBackground
+              source={require('../assest/user.png')}
+              style={{
+                // marginTop: 5,
+                width: 20,
+                height: 20,
+              }}></ImageBackground>
+            <Text>Profile</Text>
+          </Pressable>
+          <Pressable
+           onPress={() => {
+            // toggleModal();
+            sessionnull()
+          }}
+            style={{
+              alignItems: 'center',
+            }}>
+            <ImageBackground
+              source={require('../assest/logout.png')}
+              style={{
+                // marginTop: 5,
+                width: 20,
+                height: 20,
+              }}></ImageBackground>
+            <Text>logout</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );

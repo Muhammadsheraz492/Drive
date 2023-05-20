@@ -10,16 +10,64 @@ import {
   ActivityIndicator,
   LogBox,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect,useState} from 'react';
 import Button from '../Components/Button';
 import messaging from '@react-native-firebase/messaging';
 import url from "../url.json"
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { json } from 'stream/consumers';
+
 export default function Login({navigation}) {
   const [username, setuserName] = React.useState();
   const [password, setPassword] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
   const [FcmToken, setFcmToken] = React.useState();
+  const [storedUsername, setStoredUsername] = useState('');
+
+  useEffect(() => {
+    retrieveData();
+  }, []);
+
+  const storeData = async (value) => {
+    console.log(value);
+    const data={
+      "status":true,
+      "username":value
+    }
+    try {
+       AsyncStorage.setItem("userstatus",JSON.stringify(data) ).then(()=>{
+        navigation.navigate('MainScreen');
+
+         console.log('Data stored successfully');
+          // AsyncStorage.removeItem('userstatus');
+          // AsyncStorage.setItem('userstatus', '');
+       }).catch((err)=>{
+        console.log(err);
+
+       })
+    } catch (error) {
+      console.log('Error storing data: ', error);
+    }
+  };
+
+  const retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        setStoredUsername(value);
+      }
+    } catch (error) {
+      console.log('Error retrieving data: ', error);
+    }
+  };
+
+  const handleLogin = () => {
+    if (username.trim() !== '') {
+      storeData('username', username);
+      setStoredUsername(username);
+    }
+  };
   LogBox.ignoreAllLogs();
 
   const generateFCMToken = async () => {
@@ -62,9 +110,9 @@ export default function Login({navigation}) {
       .request(options)
       .then(function (response) {
         // console.log(response.data);
-        if (response.data.status) {
-          navigation.navigate('MainScreen');
-          alert(response.data.message);
+        if (response.data.status == true) {
+          console.log(response.data);
+          storeData(response.data.username)
         } else {
           alert('Username and password wrong!');
         }
@@ -161,6 +209,7 @@ export default function Login({navigation}) {
         <TouchableOpacity
           onPress={() => {
             GetData();
+            
             setIsLoading(!isLoading);
           }}>
           <Button

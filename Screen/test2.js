@@ -23,7 +23,6 @@ class Example extends Component {
   constructor(props) {
     super(props);
 
-    // AirBnB's Office, and Apple Park
     this.state = {
       coordinates: [
         {
@@ -41,14 +40,7 @@ class Example extends Component {
 
   }
 
-//   onMapPress = (e) => {
-//     // this.setState({
-//     //   coordinates: [
-//     //     ...this.state.coordinates,
-//     //     e.nativeEvent.coordinate,
-//     //   ],
-//     // });
-//   }
+
 
   render() {
     return (

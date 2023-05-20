@@ -8,91 +8,69 @@ import MainScreen from './Screen/MainScreen';
 import QRCode from './Screen/QRCode';
 import Notification from './Screen/Notification';
 import Map from './Screen/Map';
-import React, { useState, useEffect } from 'react';
-import { Platform, Text, View } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Platform, Text, View, ActivityIndicator} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import BackgroundGeolocation from 'react-native-background-geolocation';
 import DriverLogin from './Screen/DriverLogin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Profile from './Screen/Profile';
 const Stack = createNativeStackNavigator();
-
 function App() {
   const [location, setLocation] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [initialRouteName, setinitialRouteName] = useState("");
+  // let initialRouteName="";
+  const retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('userstatus');
+      if (value != null) {
+        // console.log();
+        // setStoredUsername(value);
+        setinitialRouteName("MainScreen")
+        // console.log(JSON.parse(value));
+        setIsLoading(false)
+      }else{
+        setinitialRouteName("Onboarding")
+       setIsLoading(false)
 
-  // useEffect(() => {
-  //   if (Platform.OS === 'android') {
-  //     BackgroundGeolocation.configure({
-  //       desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
-  //       stationaryRadius: 50,
-  //       distanceFilter: 50,
-  //       notificationTitle: 'Background tracking',
-  //       notificationText: 'enabled',
-  //       startOnBoot: false,
-  //       stopOnTerminate: true,
-  //       locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
-  //       interval: 10000,
-  //       fastestInterval: 5000,
-  //       activitiesInterval: 10000,
-  //       stopOnStillActivity: false,
-  //     });
-  //   }
 
-  //   Geolocation.requestAuthorization();
+      }
+    } catch (error) {
+      console.log('Error retrieving data: ', error);
+      setIsLoading(false)
 
-  //   const locationWatchId = Geolocation.watchPosition(
-  //     (position) => {
-  //     console.log(location);
+    }
+  };
+  useEffect(()=>{
+    retrieveData();
+  })
 
-  //       setLocation(position);
-  //     },
-  //     (error) => {
-  //       console.log(error);
-  //     },
-  //     {
-  //       enableHighAccuracy: true,
-  //       timeout: 20000,
-  //       maximumAge: 1000,
-  //       distanceFilter: 10,
-  //       interval: 10000,
-  //       fastestInterval: 5000,
-  //     }
-  //   );
+  
 
-  //   return () => {
-  //     Geolocation.clearWatch(locationWatchId);
-  //   };
-  // }, []);
+  return isLoading ? (
+    <View  style={{flex:1,justifyContent:"center",alignItems:"center"}}>
 
-  // useEffect(() => {
-  //   BackgroundGeolocation.on('location', (location) => {
-  //     console.log(location);
-  //     setLocation(location);
-  //   });
+<ActivityIndicator size={"large"}  />
 
-  //   return () => {
-  //     BackgroundGeolocation.removeListeners();
-  //   };
-  // }, []);
 
-  // useEffect(() => {
-  //   BackgroundGeolocation.start();
-
-  //   return () => {
-  //     BackgroundGeolocation.stop();
-  //   };
-  // }, []);
-
-  return (
+    </View>
+  ) : (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        initialRouteName={initialRouteName}
+        screenOptions={{headerShown: false}}>
         <Stack.Screen name="Onboarding" component={Onboarding} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
         <Stack.Screen name="QRCode" component={QRCode} />
-        
+
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="DriverLogin" component={DriverLogin} />
         
+        <Stack.Screen name="Profile" component={Profile} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
