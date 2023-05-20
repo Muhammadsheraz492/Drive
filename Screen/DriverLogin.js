@@ -63,7 +63,7 @@ export default function DriverLogin({navigation}) {
       .then(function (response) {
         // console.log(response.data);
         if (response.data.status) {
-          navigation.navigate('MainScreen');
+          navigation.navigate('Maindriver');
           alert(response.data.message);
         } else {
           alert('Username and password wrong!');

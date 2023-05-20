@@ -22,6 +22,8 @@ export default function MainScreen({navigation}) {
   const [search, setsearch] = React.useState();
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [data, setdata] = React.useState();
+  const [Email, setEmail] = React.useState();
+
   const [storedUsername, setStoredUsername] = React.useState('');
 
   const toggleModal = () => {
@@ -65,7 +67,7 @@ export default function MainScreen({navigation}) {
     axios
       .request(options)
       .then(function (response) {
-        // console.log(response.data);
+        console.log(response.data.message);
         retrieveData();
         setdata(response.data.message);
       })
@@ -391,7 +393,11 @@ export default function MainScreen({navigation}) {
                 <View>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate('Map', {});
+                      navigation.navigate("Mapscreen", {
+                        driver_email:item.driver_email
+                      }
+                      
+                      );
                     }}>
                     <Text
                       style={{

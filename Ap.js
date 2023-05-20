@@ -7,7 +7,7 @@ import Login from './Screen/Login';
 import MainScreen from './Screen/MainScreen';
 import QRCode from './Screen/QRCode';
 import Notification from './Screen/Notification';
-import Map from './Screen/Map';
+import Map from './Screen/Mapscreen';
 import React, {useState, useEffect} from 'react';
 import {Platform, Text, View, ActivityIndicator} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -15,6 +15,9 @@ import BackgroundGeolocation from 'react-native-background-geolocation';
 import DriverLogin from './Screen/DriverLogin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from './Screen/Profile';
+import Maindriver from './Screen/Maindriver';
+import DriverNotification from './Screen/DriverNotification';
+import Mapscreen from './Screen/Mapscreen';
 const Stack = createNativeStackNavigator();
 function App() {
   const [location, setLocation] = useState(null);
@@ -66,10 +69,12 @@ function App() {
         <Stack.Screen name="QRCode" component={QRCode} />
 
         <Stack.Screen name="Notification" component={Notification} />
-        <Stack.Screen name="Map" component={Map} />
+        <Stack.Screen name="Mapscreen" component={Mapscreen} />
         <Stack.Screen name="DriverLogin" component={DriverLogin} />
         
         <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="Maindriver" component={Maindriver} />
+        <Stack.Screen name="DriverNotification" component={DriverNotification} />
 
       </Stack.Navigator>
     </NavigationContainer>
