@@ -7,37 +7,75 @@ import {
   TouchableOpacity,
   StatusBar,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  LogBox,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Button from '../Components/Button';
+import messaging from '@react-native-firebase/messaging';
+import url from "../url.json"
 import axios from 'axios';
 export default function Login({navigation}) {
   const [username, setuserName] = React.useState();
   const [password, setPassword] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
-  const GetData=()=>{
-        navigation.navigate('MainScreen');
+  const [FcmToken, setFcmToken] = React.useState();
+  LogBox.ignoreAllLogs();
 
+  const generateFCMToken = async () => {
+    try {
+      messaging()
+        .requestPermission()
+        .then(() => {
+          return messaging().getToken();
+        })
+        .then(token => {
+          setFcmToken(token);
+          console.log(token);
+        })
+        .catch(error => {
+          console.log('Error getting FCM token:', error);
+        });
+      // Handle the token as needed (e.g., send it to your server)
+    } catch (error) {
+      console.error('Error generating FCM token:', error);
+    }
+
+    
+  };
+  
+  useEffect(() => {
+    generateFCMToken();
+  }, []);
+  const GetData = () => {
     const options = {
       method: 'POST',
-      url: 'http://192.168.0.104:4000/User/Login',
-      params: {email: username, password: password},
-      data: {}
+      url: `http://${url.baseurl}:3000/User/login`,
+      data: {
+        email: username,
+        password: password,
+        device_token: FcmToken,
+      },
     };
-    
-    axios.request(options).then(function (response) {
-      // console.log(response.data);
-      if ((response.data.status)) {
-        
-      }else{
-        alert("Username and password wrong!")
-      }
 
-    }).catch(function (error) {
-      console.error(error);
-    });
-  }
+    axios
+      .request(options)
+      .then(function (response) {
+        // console.log(response.data);
+        if (response.data.status) {
+          navigation.navigate('MainScreen');
+          alert(response.data.message);
+        } else {
+          alert('Username and password wrong!');
+        }
+      })
+      .catch(function (error) {
+        // console.error(error);
+        if (error.response) {
+          alert(error.response.data.message);
+        }
+      });
+  };
   const toggleLoading = () => {
     setIsLoading(!isLoading);
   };
@@ -123,14 +161,18 @@ export default function Login({navigation}) {
         <TouchableOpacity
           onPress={() => {
             GetData();
-            setIsLoading(!isLoading)
+            setIsLoading(!isLoading);
           }}>
-
-             <Button Text={!isLoading ?  <Text>
-             Login
-             </Text> :<ActivityIndicator size={"small"}/>  }/>
+          <Button
+            Text={
+              !isLoading ? (
+                <Text>Login</Text>
+              ) : (
+                <ActivityIndicator size={'small'} />
+              )
+            }
+          />
         </TouchableOpacity>
-        
       </View>
     </ScrollView>
   );

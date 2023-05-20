@@ -11,17 +11,37 @@ import {
   Modal,
   Button,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
+import axios from 'axios';
+import url from "../url.json"
 
 export default function MainScreen({navigation}) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [sec, setSec] = React.useState();
   const [search, setsearch] = React.useState();
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [data, setdata] = React.useState();
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
+
+  useEffect(() => {
+    const options = {
+      method: 'GET',
+      url: `http://${url.baseurl}:3000/User/routes`,
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        // console.log(response.data);
+        setdata(response.data.message);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }, []);
   const Modal1 = props => {
     return (
       <Modal
@@ -113,7 +133,7 @@ export default function MainScreen({navigation}) {
                     color: '#000000',
                     marginTop: 11,
                   }}>
-                  Arrival:{props.morning}
+                  {/* Arrival:{props.morning} */}
                 </Text>
                 <Text
                   style={{
@@ -121,7 +141,7 @@ export default function MainScreen({navigation}) {
                     color: '#000000',
                     marginTop: 11,
                   }}>
-                  Departure:{props.morningto}
+                  {/* Departure:{props.morningto} */}
                 </Text>
               </View>
             </View>
@@ -160,7 +180,7 @@ export default function MainScreen({navigation}) {
                     color: '#000000',
                     marginTop: 11,
                   }}>
-                  Arrival:{props.evening}
+                  {/* Arrival:{props.evening} */}
                 </Text>
                 <Text
                   style={{
@@ -168,7 +188,7 @@ export default function MainScreen({navigation}) {
                     color: '#000000',
                     marginTop: 11,
                   }}>
-                  Departure:{props.eveningto}
+                  {/* Departure:{props.eveningto} */}
                 </Text>
               </View>
             </View>
@@ -177,20 +197,20 @@ export default function MainScreen({navigation}) {
       </Modal>
     );
   };
-  const data = [
-    {
-      routename: 'Route Name',
-      Busno: '21',
-      schedule: [
-        {
-          morningto: '7:00 AM',
-          morning: '2:00 PM',
-          eveningto: '12:00 PM',
-          evening: '8:00 PM',
-        },
-      ],
-    },
-  ];
+  // const data = [
+  //   {
+  //     routename: 'Route Name',
+  //     Busno: '21',
+  //     schedule: [
+  //       {
+  //         morningto: '7:00 AM',
+  //         morning: '2:00 PM',
+  //         eveningto: '12:00 PM',
+  //         evening: '8:00 PM',
+  //       },
+  //     ],
+  //   },
+  // ];
 
   return (
     <View
@@ -355,10 +375,10 @@ export default function MainScreen({navigation}) {
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate('Map', {
-                        morning: item.schedule.morning,
-                        morningto: item.schedule.morningto,
-                        evening: item.schedule.evening,
-                        eveningto: item.schedule.eveningto,
+                        // morning: item.schedule.morning,
+                        // morningto: item.schedule.morningto,
+                        // evening: item.schedule.evening,
+                        // eveningto: item.schedule.eveningto,
                       });
                     }}>
                     <Text
@@ -366,20 +386,21 @@ export default function MainScreen({navigation}) {
                         fontSize: 18,
                         color: '#000000',
                       }}>
-                      {item.routename}
+                      {item.bas_route}
                     </Text>
                     <Text
                       style={{
                         fontSize: 14,
                         color: '#000000',
                       }}>
-                      Bus no: {item.Busno}
+                      Bus no: {item.bas_id}
                     </Text>
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity
+                disabled={true}
                   onPress={() => {
-                    toggleModal();
+                    // toggleModal();
                   }}>
                   <ImageBackground
                     source={require('../assest/schedule.png')}
@@ -388,10 +409,10 @@ export default function MainScreen({navigation}) {
                       height: 36,
                     }}></ImageBackground>
                   <Modal1
-                    morning={item.schedule.morning}
-                    morningto={item.schedule.morningto}
-                    evening={item.schedule.evening}
-                    eveningto={item.schedule.eveningto}
+                  // morning={item.schedule.morning}
+                  // morningto={item.schedule.morningto}
+                  // evening={item.schedule.evening}
+                  // eveningto={item.schedule.eveningto}
                   />
                 </TouchableOpacity>
               </View>

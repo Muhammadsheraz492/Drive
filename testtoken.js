@@ -6,6 +6,7 @@ import messaging from '@react-native-firebase/messaging';
 import auth from '@react-native-firebase/auth';
 
 export default function testtoken() {
+  const [ FcmToken ,setFcmToken]=React.useState()
     const generateFCMToken = async () => {
         try {
             messaging()
@@ -14,7 +15,7 @@ export default function testtoken() {
         return messaging().getToken();
       })
       .then((token) => {
-        // setFcmToken(token);
+        setFcmToken(token);
         console.log(token);
       })
       .catch((error) => {
@@ -52,7 +53,7 @@ export default function testtoken() {
 
   return (
     <View>
-      <Text>testtoken</Text>
+      <Text>testtoken {FcmToken}</Text>
     </View>
   )
 }
