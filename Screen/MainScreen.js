@@ -11,20 +11,24 @@ import {
   Modal,
   Button,
   Pressable,
+  ActivityIndicator,
+
 } from 'react-native';
 import React, {useEffect} from 'react';
 import axios from 'axios';
 import url from '../url.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState } from 'react';
 export default function MainScreen({navigation}) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [sec, setSec] = React.useState();
+  const [loading, setLoading] = useState(true);
   const [search, setsearch] = React.useState();
   const [isModalVisible, setIsModalVisible] = React.useState(false);
-  const [data, setdata] = React.useState();
-  const [Email, setEmail] = React.useState();
+  const [data, setdata] = React.useState([]);
+  
 
   const [storedUsername, setStoredUsername] = React.useState('');
+  const [storedEmail, setStoredEmail] = React.useState('');
+  const [originalData,setoriginalData]=useState([])
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -33,24 +37,24 @@ export default function MainScreen({navigation}) {
     try {
       const value = await AsyncStorage.getItem('userstatus');
       if (value !== null) {
-        // console.log(value);
+      
         setStoredUsername(JSON.parse(value).username);
-        // AsyncStorage.setItem('userstatus', '');
+        setStoredEmail(JSON.parse(value).Email)
+        
       }
     } catch (error) {
       console.log('Error retrieving data: ', error);
+      
     }
+    setLoading(false)
   };
   const sessionnull = async () => {
     try {
-      // const value = await AsyncStorage.setItem('userstatus', '');
-      // if (value !== null) {
-      // console.log(value);
-      // setStoredUsername(JSON.parse(value).username);
+     
       AsyncStorage.removeItem('userstatus');
       navigation.navigate('Login');
 
-      // }
+   
     } catch (error) {
       console.log('Error session null : ', error);
     }
@@ -64,177 +68,47 @@ export default function MainScreen({navigation}) {
     axios
       .request(options)
       .then(function (response) {
-        // console.log(response.data.message);
-        retrieveData();
+        
         setdata(response.data.message);
+        setoriginalData(response.data.message);
+        retrieveData();
+        
       })
       .catch(function (error) {
         console.error(error);
       });
   }, []);
-  const Modal1 = props => {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={toggleModal}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            }}></View>
+ 
+const searchFilter = (text)=>{
+if(text){
+  const newdata=originalData.filter((item)=>{
+   const itemdata=item.bas_route?item.bas_route.toUpperCase():"".toUpperCase();
+   const textData=text.toUpperCase();
+   return itemdata.indexOf(textData)>-1;
+  })
+  setdata(newdata);
+  setsearch(text);
+}else{
+  setdata(originalData);
+  setsearch(text);
+}
 
-          <View
-            style={{
-              backgroundColor: '#fff',
-              padding: 16,
-              height: 231,
-              width: '85%',
-              borderRadius: 10,
-            }}>
-            <View
-              style={{
-                width: '100%',
-                alignSelf: 'center',
-                // marginTop: 10,
-                justifyContent: 'space-between',
-                flexDirection: 'row',
-              }}>
-              <Text
-                style={{
-                  fontSize: 17,
-                  color: '#000000',
-                }}>
-                Check Schedule of Bus
-              </Text>
-              <TouchableOpacity onPress={toggleModal}>
-                <ImageBackground
-                  source={require('../assest/close.png')}
-                  style={{
-                    marginTop: 5,
-                    width: 17,
-                    height: 17,
-                  }}></ImageBackground>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                width: '100%',
-                alignSelf: 'center',
-                marginTop: 15,
-              }}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: '#000000',
-                }}>
-                Morning Timing:
-              </Text>
-              <View
-                style={{
-                  borderBottomWidth: 0.5,
-                  borderBottomColor: '#000000',
-                  borderStyle: 'dotted',
-                  marginTop: 11,
-                }}
-              />
-              <View
-                style={{
-                  width: '100%',
-                  alignSelf: 'center',
-                  // marginTop: 25,
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                }}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: '#000000',
-                    marginTop: 11,
-                  }}>
-                  {/* Arrival:{props.morning} */}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: '#000000',
-                    marginTop: 11,
-                  }}>
-                  {/* Departure:{props.morningto} */}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={{
-                width: '100%',
-                alignSelf: 'center',
-                marginTop: 15,
-              }}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: '#000000',
-                }}>
-                Evening Timing:
-              </Text>
-              <View
-                style={{
-                  borderBottomWidth: 0.5,
-                  borderBottomColor: '#000000',
-                  borderStyle: 'dotted',
-                  marginTop: 11,
-                }}
-              />
-              <View
-                style={{
-                  width: '100%',
-                  alignSelf: 'center',
-                  // marginTop: 25,
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                }}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: '#000000',
-                    marginTop: 11,
-                  }}>
-                  {/* Arrival:{props.evening} */}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: '#000000',
-                    marginTop: 11,
-                  }}>
-                  {/* Departure:{props.eveningto} */}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    );
-  };
-
+}
   return (
+    
     <View
       style={{
         backgroundColor: '#FFB800',
         flex: 1,
         // marginTop:"10%",
       }}>
+ {loading ? (
+        <View style={styles.activityIndicatorContainer}>
+          <ActivityIndicator size="large" color="blue" />
+        </View>
+      ) : (
+        <>
+   
       <StatusBar backgroundColor={'#FFB800'} />
       <View
         style={{
@@ -245,6 +119,8 @@ export default function MainScreen({navigation}) {
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
         }}>
+
+
         <View
           style={{
             width: '90%',
@@ -302,13 +178,12 @@ export default function MainScreen({navigation}) {
                 width: 20,
                 height: 20,
               }}></ImageBackground>
-
             <TextInput
               style={styles.input}
-              onChangeText={search => setsearch(search)}
+              onChangeText={text => searchFilter(text)}
               placeholderTextColor="#969696"
               value={search}
-              placeholder="Search your bus No/Route"
+              placeholder="Search your Route"
               autocorrect={false}
               autoCapitalize="none"
             />
@@ -318,7 +193,9 @@ export default function MainScreen({navigation}) {
               width: '15%',
             }}
             onPress={() => {
-              navigation.navigate('QRCode');
+              navigation.navigate('QRCodeGenerator',{
+                student_email: storedEmail
+              });
             }}>
             <View
               style={{
@@ -358,7 +235,7 @@ export default function MainScreen({navigation}) {
               fontSize: 15,
               color: '#000000',
             }}>
-            Total Buses: 20
+            Total Buses: {data.length}
           </Text>
         </View>
         <FlatList
@@ -392,6 +269,7 @@ export default function MainScreen({navigation}) {
                     onPress={() => {
                       navigation.navigate('Mapscreen', {
                         driver_email: item.driver_email,
+                        student_email: storedEmail
                       });
                     }}>
                     <Text
@@ -421,12 +299,12 @@ export default function MainScreen({navigation}) {
                       width: 36,
                       height: 36,
                     }}></ImageBackground>
-                  <Modal1
+                  {/* <Modal1
                   // morning={item.schedule.morning}
                   // morningto={item.schedule.morningto}
                   // evening={item.schedule.evening}
                   // eveningto={item.schedule.eveningto}
-                  />
+                  /> */}
                 </TouchableOpacity>
               </View>
             </View>
@@ -467,24 +345,7 @@ export default function MainScreen({navigation}) {
               Home
             </Text>
           </Pressable>
-          <Pressable
-            onPress={() => {
-              // toggleModal();
-              navigation.navigate('Profile');
-            }}
-            style={{
-              alignItems: 'center',
-              // justifyContent:"center"
-            }}>
-            <ImageBackground
-              source={require('../assest/user.png')}
-              style={{
-                // marginTop: 5,
-                width: 20,
-                height: 20,
-              }}></ImageBackground>
-            <Text>Profile</Text>
-          </Pressable>
+      
           <Pressable
             onPress={() => {
               // toggleModal();
@@ -500,15 +361,31 @@ export default function MainScreen({navigation}) {
                 width: 20,
                 height: 20,
               }}></ImageBackground>
-            <Text>logout</Text>
+            <Text
+            style={{
+                color: '#000000',
+                // backgroundColor:"#fff"
+              }}
+            
+            >logout</Text>
           </Pressable>
         </View>
       </View>
+      </>)}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+
+ 
+    activityIndicatorContainer: {
+      ...StyleSheet.absoluteFill,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    },
+  
   input: {
     // borderWidth: 1,
     borderColor: '#FFB800',

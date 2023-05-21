@@ -6,16 +6,21 @@ import {
   StyleSheet,
   View,
   Text,
+  TouchableOpacity,
 } from 'react-native';
+import url from '../url.json';
+
 import MapView, {Marker} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import Url from '../url.json';
 const {width, height} = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
-const LATITUDE = 37.771707;
-const LONGITUDE = -122.4053769;
-const LATITUDE_DELTA = 0.0922;
+// , 74.10051460652684
+
+const LATITUDE = 32.564367251316774;
+const LONGITUDE = 74.07770515203411;
+const LATITUDE_DELTA = 0.1922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC-at3-WlccF6DEkDd3U0MEn9CUraQwqXw';
@@ -23,10 +28,41 @@ const GOOGLE_MAPS_APIKEY = 'AIzaSyC-at3-WlccF6DEkDd3U0MEn9CUraQwqXw';
 const Example = ({route}) => {
   const mapViewRef = useRef(null);
   const [loading, setLoading] = useState(true);
-
+  const [checkclick, setcheckclick] = useState(false);
   const [coordinates, setcoordinates] = useState([]);
   const [Student, setStudent] = useState([]);
-  const {driver_email} = route.params;
+  const [status,setstatus]=useState(false)
+  const {driver_email, student_email} = route.params;
+  // console.log(student_email);
+  const UpdatedLocation = () => {
+    setcheckclick(true);
+    setstatus(true);
+    const options = {
+      method: 'POST',
+      url: `http://${url.baseurl}:3000/User/update_Student_location`,
+      data: {
+        email: student_email,
+        latitude: LATITUDE,
+        longitude: LONGITUDE,
+      },
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data);
+        setstatus(false)
+      })
+      .catch(function (error) {
+        // console.error(error);
+        if(err.response){
+
+        }
+        setstatus(false)
+
+      });
+  };
+
   const GetData = () => {
     let config = {
       method: 'get',
@@ -39,7 +75,7 @@ const Example = ({route}) => {
       .request(config)
       .then(response => {
         setcoordinates(response.data.message[0].destination);
-        // console.log(JSON.stringify(response.data.message[0].destination));
+        console.log(JSON.stringify(response.data.message[0].destination));
         GetStudentLotion();
       })
       .catch(error => {
@@ -65,10 +101,54 @@ const Example = ({route}) => {
         console.log(error.response);
       });
   };
+
+
+  const student_status= ()=>{
+    const options = {
+      method: 'GET',
+      url: `http://${Url.baseurl}:3000/User/student_status`,
+      params: {email: student_email},
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        // console.log(response.data.status);
+        setcheckclick(response.data.status)
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }
+
+  const Cancel= ()=>{
+    setstatus(true)
+    const options = {
+      method: 'GET',
+      url: `http://${Url.baseurl}:3000/User/cancel_user`,
+      params: {email: student_email},
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        // console.log(response.data.status);
+    setcheckclick(false);
+    setstatus(false)
+
+
+        // setcheckclick(response.data.status)
+      })
+      .catch(function (error) {
+        console.error(error);
+    setstatus(false)
+
+      });
+  }
   useEffect(() => {
     GetData();
+    student_status()
   }, []);
-
   return (
     <View style={styles.container}>
       {loading ? (
@@ -105,8 +185,8 @@ const Example = ({route}) => {
                   );
                 }}
                 onReady={result => {
-                  // console.log(`Distance: ${result.distance} km`);
-                  // console.log(`Duration: ${result.duration} min.`);
+                  console.log(`Distance: ${result.distance} km`);
+                  console.log(`Duration: ${result.duration} min.`);
                   mapViewRef.current.fitToCoordinates(result.coordinates, {
                     edgePadding: {
                       right: width / 20,
@@ -144,19 +224,23 @@ const Example = ({route}) => {
             ))}
             {/* // ))} */}
           </MapView>
-          <View
-            style={{
-              top: 5,
-              right: 5,
-              width: 80,
-              height: 30,
-              alignSelf: 'flex-end',
-              backgroundColor: '#000080',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text style={{color: '#fff'}}>Ready</Text>
-          </View>
+          <TouchableOpacity onPress={status?null:checkclick ? Cancel : UpdatedLocation}>
+            <View
+              style={{
+                top: 5,
+                right: 5,
+                width: 80,
+                height: 30,
+                alignSelf: 'flex-end',
+                backgroundColor: checkclick ? 'gray' : '#000080',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={{color: '#fff'}}>
+                {status?<ActivityIndicator size={"small"} />:checkclick ? 'cancel' : 'Ready'}
+              </Text>
+            </View>
+          </TouchableOpacity>
         </>
       )}
     </View>

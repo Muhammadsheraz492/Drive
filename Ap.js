@@ -5,9 +5,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Onboarding from './Screen/Onboarding';
 import Login from './Screen/Login';
 import MainScreen from './Screen/MainScreen';
-import QRCode from './Screen/QRCode';
+import QRCodeGenerator from './Screen/QRCodeGenerator';
 import Notification from './Screen/Notification';
-import Map from './Screen/Mapscreen';
+// import Map from './Screen/Mapscreen';
 import React, {useState, useEffect} from 'react';
 import {Platform, Text, View, ActivityIndicator} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -66,7 +66,7 @@ function App() {
         <Stack.Screen name="Onboarding" component={Onboarding} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
-        <Stack.Screen name="QRCode" component={QRCode} />
+        <Stack.Screen name="QRCodeGenerator" component={QRCodeGenerator} />
 
         <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="Mapscreen" component={Mapscreen} />
