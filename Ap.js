@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from './Screen/Profile';
 import Maindriver from './Screen/Maindriver';
 import DriverNotification from './Screen/DriverNotification';
-import Mapscreen from './Screen/Mapscreen';
+import Mapscreen from './Screen/test2';
 const Stack = createNativeStackNavigator();
 function App() {
   const [location, setLocation] = useState(null);

@@ -10,7 +10,7 @@ import {
   Animated,
   Modal,
   Button,
-  Pressable
+  Pressable,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import axios from 'axios';
@@ -35,8 +35,7 @@ export default function MainScreen({navigation}) {
       if (value !== null) {
         // console.log(value);
         setStoredUsername(JSON.parse(value).username);
-          // AsyncStorage.setItem('userstatus', '');
-
+        // AsyncStorage.setItem('userstatus', '');
       }
     } catch (error) {
       console.log('Error retrieving data: ', error);
@@ -46,12 +45,10 @@ export default function MainScreen({navigation}) {
     try {
       // const value = await AsyncStorage.setItem('userstatus', '');
       // if (value !== null) {
-        // console.log(value);
-        // setStoredUsername(JSON.parse(value).username);
-        AsyncStorage.removeItem('userstatus');
-        navigation.navigate("Login")
-          
-
+      // console.log(value);
+      // setStoredUsername(JSON.parse(value).username);
+      AsyncStorage.removeItem('userstatus');
+      navigation.navigate('Login');
 
       // }
     } catch (error) {
@@ -67,7 +64,7 @@ export default function MainScreen({navigation}) {
     axios
       .request(options)
       .then(function (response) {
-        console.log(response.data.message);
+        // console.log(response.data.message);
         retrieveData();
         setdata(response.data.message);
       })
@@ -393,11 +390,9 @@ export default function MainScreen({navigation}) {
                 <View>
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("Mapscreen", {
-                        driver_email:item.driver_email
-                      }
-                      
-                      );
+                      navigation.navigate('Mapscreen', {
+                        driver_email: item.driver_email,
+                      });
                     }}>
                     <Text
                       style={{
@@ -455,11 +450,8 @@ export default function MainScreen({navigation}) {
             }}
             onPress={() => {
               // toggleModal();
-              navigation.navigate("MainScreen")
-            }}
-            >
-
-
+              navigation.navigate('MainScreen');
+            }}>
             <ImageBackground
               source={require('../assest/home.png')}
               style={{
@@ -476,11 +468,10 @@ export default function MainScreen({navigation}) {
             </Text>
           </Pressable>
           <Pressable
-           onPress={() => {
-            // toggleModal();
-            navigation.navigate("Profile")
-
-          }}
+            onPress={() => {
+              // toggleModal();
+              navigation.navigate('Profile');
+            }}
             style={{
               alignItems: 'center',
               // justifyContent:"center"
@@ -495,10 +486,10 @@ export default function MainScreen({navigation}) {
             <Text>Profile</Text>
           </Pressable>
           <Pressable
-           onPress={() => {
-            // toggleModal();
-            sessionnull()
-          }}
+            onPress={() => {
+              // toggleModal();
+              sessionnull();
+            }}
             style={{
               alignItems: 'center',
             }}>
