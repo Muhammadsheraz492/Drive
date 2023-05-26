@@ -1,4 +1,7 @@
 {
   "name": "Drive",
-  "displayName": "Drive"
+  "displayName": "Drive",
+  "plugins": [
+    "@notifee/react-native"
+  ]
 }

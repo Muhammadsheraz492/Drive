@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Platform, Text, View } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Platform, Text, View} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import BackgroundGeolocation from 'react-native-background-geolocation';
+
 const MyComponent = () => {
   const [location, setLocation] = useState(null);
 
@@ -16,32 +17,31 @@ const MyComponent = () => {
         startOnBoot: false,
         stopOnTerminate: true,
         locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
-        interval: 10000,
-        fastestInterval: 5000,
-        activitiesInterval: 10000,
+        interval: 3000, // Update location every 3 seconds
+        fastestInterval: 3000, // Request location updates every 3 seconds
+        activitiesInterval: 3000, // Update activities every 3 seconds
         stopOnStillActivity: false,
       });
     }
 
-    Geolocation.requestAuthorization();
+    // Geolocation.requestAuthorization();
 
     const locationWatchId = Geolocation.watchPosition(
-      (position) => {
-      console.log(location);
-
+      position => {
+        console.log(position);
         setLocation(position);
       },
-      (error) => {
+      error => {
         console.log(error);
       },
       {
         enableHighAccuracy: true,
         timeout: 20000,
         maximumAge: 1000,
-        distanceFilter: 10,
-        interval: 10000,
-        fastestInterval: 5000,
-      }
+        distanceFilter: 0, // Receive all location updates
+        interval: 3000, // Update location every 3 seconds
+        fastestInterval: 3000, // Request location updates every 3 seconds
+      },
     );
 
     return () => {
@@ -50,7 +50,7 @@ const MyComponent = () => {
   }, []);
 
   useEffect(() => {
-    BackgroundGeolocation.on('location', (location) => {
+    BackgroundGeolocation.on('location', location => {
       console.log(location);
       setLocation(location);
     });
@@ -69,14 +69,10 @@ const MyComponent = () => {
   }, []);
 
   return (
-    <>
     <View>
       <Text>Latitude: {location?.coords.latitude}</Text>
       <Text>Longitude: {location?.coords.longitude}</Text>
     </View>
-  
-    </>
-
   );
 };
 
