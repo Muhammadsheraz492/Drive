@@ -52,7 +52,7 @@ export default function MainScreen({navigation}) {
     try {
      
       AsyncStorage.removeItem('userstatus');
-      navigation.navigate('Login');
+      navigation.replace('Login');
 
    
     } catch (error) {

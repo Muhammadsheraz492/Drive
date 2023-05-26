@@ -8,5 +8,6 @@ import {name as appName} from './app.json';
 import testtoken from './testtoken';
 // import Map from './Screen/Map';
 import MapScreen from './Screen/test2';
+import test from './Screen/test';
 
 AppRegistry.registerComponent(appName, () => App);

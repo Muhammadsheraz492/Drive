@@ -39,7 +39,7 @@ export default function Login({navigation}) {
     try {
       AsyncStorage.setItem('userstatus', JSON.stringify(data))
         .then(() => {
-          navigation.navigate('MainScreen');
+          navigation.replace('MainScreen');
           console.log('Data stored successfully');
           // AsyncStorage.removeItem('userstatus');
           // AsyncStorage.setItem('userstatus', '');

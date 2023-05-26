@@ -18,11 +18,14 @@ import Profile from './Screen/Profile';
 import Maindriver from './Screen/Maindriver';
 import DriverNotification from './Screen/DriverNotification';
 import Mapscreen from './Screen/test2';
+import Drivermap from './Screen/Drivermap';
 const Stack = createNativeStackNavigator();
 function App() {
   const [location, setLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [initialRouteName, setinitialRouteName] = useState("");
+  const [initialRouteName, setinitialRouteName] = useState("Onboarding");
+  const [initialdriverName, setinitialdriverName] = useState("");
+
   // let initialRouteName="";
   const retrieveData = async () => {
     try {
@@ -32,21 +35,44 @@ function App() {
         // setStoredUsername(value);
         setinitialRouteName("MainScreen")
         // console.log(JSON.parse(value));
+        // setIsLoading(false)
+      }else{
+        // setinitialRouteName("Onboarding")
+      //  setIsLoading(false)
+
+
+      }
+    } catch (error) {
+      console.log('Error retrieving data: ', error);
+      // setIsLoading(false)
+
+    }
+  };
+  const retrieveDatadriver = async () => {
+    try {
+      const value = await AsyncStorage.getItem('driverstatus');
+      if (value != null) {
+        // console.log(value);
+        // setStoredUsername(value);
+        setinitialRouteName("Maindriver")
+        // console.log(JSON.parse(value));
         setIsLoading(false)
       }else{
-        setinitialRouteName("Onboarding")
+        // setinitialdriverName("Onboarding")
        setIsLoading(false)
 
 
       }
     } catch (error) {
       console.log('Error retrieving data: ', error);
-      setIsLoading(false)
+      // setIsLoading(false)
 
     }
   };
+
   useEffect(()=>{
     retrieveData();
+    retrieveDatadriver();
   })
 
   
@@ -75,6 +101,8 @@ function App() {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="Maindriver" component={Maindriver} />
         <Stack.Screen name="DriverNotification" component={DriverNotification} />
+        <Stack.Screen name="Drivermap" component={Drivermap} />
+
 
       </Stack.Navigator>
     </NavigationContainer>

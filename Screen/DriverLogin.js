@@ -17,11 +17,53 @@ import messaging from '@react-native-firebase/messaging';
 import {useEffect} from 'react';
 import url from "../url.json"
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function DriverLogin({navigation}) {
   const [username, setuserName] = React.useState();
   const [password, setPassword] = React.useState();
   const [FcmToken, setFcmToken] = React.useState();
+  const [storedUsername, setStoredUsername] = React.useState('');
+
+  
+  useEffect(() => {
+    retrieveData();
+  }, []);
+
+  const storeData = async (value, email) => {
+    // console.log(email);
+    const data = {
+      status: true,
+      username: value,
+      Email: email,
+    };
+    try {
+      AsyncStorage.setItem('driverstatus', JSON.stringify(data))
+        .then(() => {
+          navigation.replace('Maindriver');
+          console.log('Data stored successfully');
+          // console.log(data);
+          // AsyncStorage.removeItem('userstatus');
+          // AsyncStorage.setItem('userstatus', '');
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log('Error storing data: ', error);
+    }
+  };
+
+  const retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        setStoredUsername(value);
+      }
+    } catch (error) {
+      console.log('Error retrieving data: ', error);
+    }
+  };
   LogBox.ignoreAllLogs();
 
   const generateFCMToken = async () => {
@@ -48,6 +90,8 @@ export default function DriverLogin({navigation}) {
     generateFCMToken();
   }, []);
   const GetData = () => {
+    // console.log(password);
+
     const options = {
       method: 'POST',
       url: `http://${url.baseurl}:3000/User/driver_login`,
@@ -62,8 +106,11 @@ export default function DriverLogin({navigation}) {
       .request(options)
       .then(function (response) {
         // console.log(response.data);
-        if (response.data.status) {
-          navigation.navigate('Maindriver');
+        if (response.data.status == true) {
+          // navigation.navigate('Maindriver');
+          // console.log(response.data.username);
+          storeData(response.data.username, response.data.email);
+
           alert(response.data.message);
         } else {
           alert('Username and password wrong!');

@@ -57,7 +57,7 @@ export default function Onboarding({navigation}) {
           />
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Login');
+              navigation.replace('Login');
             }}>
             <Button Text={'Sign In as Student'} />
           </TouchableOpacity>
@@ -70,7 +70,7 @@ export default function Onboarding({navigation}) {
      
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("DriverLogin")
+              navigation.replace("DriverLogin")
             }}>
             <Button Text={'Sign In as Driver'} />
           </TouchableOpacity>

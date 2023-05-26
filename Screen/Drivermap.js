@@ -19,7 +19,7 @@ import Geolocation from 'react-native-geolocation-service';
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC-at3-WlccF6DEkDd3U0MEn9CUraQwqXw';
 
-const Example = ({route}) => {
+const Drivermap = ({route}) => {
   const mapViewRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [checkclick, setcheckclick] = useState(false);
@@ -29,10 +29,10 @@ const Example = ({route}) => {
   const {driver_email, student_email} = route.params;
   const LATITUDE = 12.23;
   const LONGITUDE = 23.33;
-  const ASPECT_RATIO = width / height;
-
   const LATITUDE_DELTA = 0.1922;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+  const ASPECT_RATIO = width / height;
+
   useEffect(() => {
     requestLocationPermission();
   }, []);
@@ -299,4 +299,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Example;
+export default Drivermap;
