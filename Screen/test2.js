@@ -185,6 +185,16 @@ const Example = ({route}) => {
     GetData();
     student_status();
   }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      GetData();
+      student_status();
+    }, 8000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
   return (
     <View style={styles.container}>
       {loading ? (
