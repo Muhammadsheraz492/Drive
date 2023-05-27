@@ -55,12 +55,12 @@ export default function Onboarding({navigation}) {
               height: '15%',
             }}
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               navigation.replace('Login');
             }}>
             <Button Text={'Sign In as Student'} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <View
             style={{

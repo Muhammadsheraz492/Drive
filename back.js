@@ -38,9 +38,9 @@ const MyComponent = () => {
         enableHighAccuracy: true,
         timeout: 20000,
         maximumAge: 1000,
-        distanceFilter: 0, // Receive all location updates
-        interval: 3000, // Update location every 3 seconds
-        fastestInterval: 3000, // Request location updates every 3 seconds
+        distanceFilter: 0, 
+        interval: 3000,
+        fastestInterval: 3000, 
       },
     );
 

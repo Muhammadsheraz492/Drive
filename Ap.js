@@ -27,27 +27,27 @@ function App() {
   const [initialdriverName, setinitialdriverName] = useState("");
 
   // let initialRouteName="";
-  const retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('userstatus');
-      if (value != null) {
-        // console.log();
-        // setStoredUsername(value);
-        setinitialRouteName("MainScreen")
-        // console.log(JSON.parse(value));
-        // setIsLoading(false)
-      }else{
-        // setinitialRouteName("Onboarding")
-      //  setIsLoading(false)
+  // const retrieveData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem('userstatus');
+  //     if (value != null) {
+  //       // console.log();
+  //       // setStoredUsername(value);
+  //       setinitialRouteName("MainScreen")
+  //       // console.log(JSON.parse(value));
+  //       // setIsLoading(false)
+  //     }else{
+  //       // setinitialRouteName("Onboarding")
+  //     //  setIsLoading(false)
 
 
-      }
-    } catch (error) {
-      console.log('Error retrieving data: ', error);
-      // setIsLoading(false)
+  //     }
+  //   } catch (error) {
+  //     console.log('Error retrieving data: ', error);
+  //     // setIsLoading(false)
 
-    }
-  };
+  //   }
+  // };
   const retrieveDatadriver = async () => {
     try {
       const value = await AsyncStorage.getItem('driverstatus');
@@ -71,7 +71,7 @@ function App() {
   };
 
   useEffect(()=>{
-    retrieveData();
+    // retrieveData();
     retrieveDatadriver();
   })
 

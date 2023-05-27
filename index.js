@@ -9,6 +9,6 @@ import testtoken from './testtoken';
 // import Map from './Screen/Map';
 import MapScreen from './Screen/test2';
 import test from './Screen/test';
-import MyComponent from './back';
+// import App from './back';
 
-AppRegistry.registerComponent(appName, () => MyComponent);
+AppRegistry.registerComponent(appName, () => App);

@@ -8,9 +8,10 @@ import {
   StatusBar,
   ScrollView,
   LogBox,
+  ActivityIndicator,
 
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '../Components/Button';
 import {Dimensions} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
@@ -24,7 +25,7 @@ export default function DriverLogin({navigation}) {
   const [password, setPassword] = React.useState();
   const [FcmToken, setFcmToken] = React.useState();
   const [storedUsername, setStoredUsername] = React.useState('');
-
+  const [loader,setloader]=useState(false)
   
   useEffect(() => {
     retrieveData();
@@ -40,6 +41,8 @@ export default function DriverLogin({navigation}) {
     try {
       AsyncStorage.setItem('driverstatus', JSON.stringify(data))
         .then(() => {
+          setloader(false)
+
           navigation.replace('Maindriver');
           console.log('Data stored successfully');
           // console.log(data);
@@ -48,9 +51,13 @@ export default function DriverLogin({navigation}) {
         })
         .catch(err => {
           console.log(err);
+          setloader(false)
+
         });
     } catch (error) {
       console.log('Error storing data: ', error);
+      setloader(false)
+
     }
   };
 
@@ -91,6 +98,7 @@ export default function DriverLogin({navigation}) {
   }, []);
   const GetData = () => {
     // console.log(password);
+    setloader(true)
 
     const options = {
       method: 'POST',
@@ -105,15 +113,16 @@ export default function DriverLogin({navigation}) {
     axios
       .request(options)
       .then(function (response) {
-        // console.log(response.data);
+        console.log(response.data);
         if (response.data.status == true) {
           // navigation.navigate('Maindriver');
           // console.log(response.data.username);
           storeData(response.data.username, response.data.email);
 
-          alert(response.data.message);
+          // alert(response.data.message);
         } else {
           alert('Username and password wrong!');
+          setloader(false)
         }
       })
       .catch(function (error) {
@@ -121,6 +130,8 @@ export default function DriverLogin({navigation}) {
         if (error.response) {
           alert(error.response.data.message);
         }
+        setloader(false)
+
       });
   };
 
@@ -228,10 +239,11 @@ export default function DriverLogin({navigation}) {
           }}
         />
         <TouchableOpacity
+        disabled={loader}
           onPress={() => {
             GetData()
           }}>
-          <Button Text={'Log In'} />
+          <Button Text={loader?<ActivityIndicator size={"small"} />:'Log In'} />
         </TouchableOpacity>
       </View>
     </ScrollView>

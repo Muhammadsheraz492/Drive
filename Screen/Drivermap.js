@@ -19,7 +19,7 @@ import Geolocation from 'react-native-geolocation-service';
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC-at3-WlccF6DEkDd3U0MEn9CUraQwqXw';
 
-const Drivermap = ({route}) => {
+const Example = ({route}) => {
   const mapViewRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [checkclick, setcheckclick] = useState(false);
@@ -29,10 +29,10 @@ const Drivermap = ({route}) => {
   const {driver_email, student_email} = route.params;
   const LATITUDE = 12.23;
   const LONGITUDE = 23.33;
-  const LATITUDE_DELTA = 0.1922;
-  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   const ASPECT_RATIO = width / height;
 
+  const LATITUDE_DELTA = 0.1922;
+  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   useEffect(() => {
     requestLocationPermission();
   }, []);
@@ -257,30 +257,7 @@ const Drivermap = ({route}) => {
             ))}
             {/* // ))} */}
           </MapView>
-          <TouchableOpacity
-            onPress={status ? null : checkclick ? Cancel : UpdatedLocation}>
-            <View
-              style={{
-                top: 5,
-                right: 5,
-                width: 80,
-                height: 30,
-                alignSelf: 'flex-end',
-                backgroundColor: checkclick ? 'gray' : '#000080',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Text style={{color: '#fff'}}>
-                {status ? (
-                  <ActivityIndicator size={'small'} />
-                ) : checkclick ? (
-                  'cancel'
-                ) : (
-                  'Ready'
-                )}
-              </Text>
-            </View>
-          </TouchableOpacity>
+
         </>
       )}
     </View>
@@ -299,4 +276,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Drivermap;
+export default Example;
