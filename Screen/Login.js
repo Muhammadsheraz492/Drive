@@ -46,9 +46,11 @@ export default function Login({navigation}) {
         })
         .catch(err => {
           console.log(err);
+          setIsLoading(false);
         });
     } catch (error) {
       console.log('Error storing data: ', error);
+      setIsLoading(false);
     }
   };
 
@@ -113,12 +115,14 @@ export default function Login({navigation}) {
           storeData(response.data.username, response.data.email);
         } else {
           alert('Username and password wrong!');
+          setIsLoading(false);
         }
       })
       .catch(function (error) {
         // console.error(error);
         if (error.response) {
           alert(error.response.data.message);
+          setIsLoading(false);
         }
       });
   };
@@ -205,6 +209,7 @@ export default function Login({navigation}) {
           }}
         />
         <TouchableOpacity
+          disabled={isLoading}
           onPress={() => {
             GetData();
 
@@ -212,10 +217,10 @@ export default function Login({navigation}) {
           }}>
           <Button
             Text={
-              !isLoading ? (
-                <Text>Login</Text>
-              ) : (
+              isLoading ? (
                 <ActivityIndicator size={'small'} />
+              ) : (
+                <Text>Login</Text>
               )
             }
           />

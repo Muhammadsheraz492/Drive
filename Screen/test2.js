@@ -26,6 +26,8 @@ const Example = ({route}) => {
   const [coordinates, setcoordinates] = useState([]);
   const [Student, setStudent] = useState([]);
   const [status, setstatus] = useState(false);
+  const [Sherazlat, setSherazlat] = useState('');
+  const [Sherazlong, setSherazlong] = useState('');
   const {driver_email, student_email} = route.params;
   const LATITUDE = 12.23;
   const LONGITUDE = 23.33;
@@ -58,9 +60,10 @@ const Example = ({route}) => {
       position => {
         const {latitude, longitude} = position.coords;
         // setCurrentLocation({ latitude, longitude });
-        console.log("hi ", latitude, longitude);
-        
-        UpdatedLocation(latitude,longitude)
+        console.log('hi ', latitude, longitude);
+        setSherazlat(latitude);
+        setSherazlong(longitude);
+        // UpdatedLocation(latitude,longitude)
       },
       error => {
         console.error('Error:', error);
@@ -70,7 +73,7 @@ const Example = ({route}) => {
   };
 
   // console.log(student_email);
-  const UpdatedLocation = (v1,v2) => {
+  const UpdatedLocation = (v1, v2) => {
     setcheckclick(true);
     setstatus(true);
     // console.log(latitude);
@@ -79,8 +82,8 @@ const Example = ({route}) => {
       url: `http://${url.baseurl}:3000/User/update_Student_location`,
       data: {
         email: student_email,
-        latitude: v1,
-        longitude: v2,
+        latitude: Sherazlat,
+        longitude: Sherazlong,
       },
     };
 

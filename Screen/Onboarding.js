@@ -48,7 +48,8 @@ export default function Onboarding({navigation}) {
               textAlign: 'center',
               marginHorizontal: 20,
             }}>
-           Stay connected with our Smart Transport System app! Track buses in real-time, get accurate arrival times, and never miss a ride.
+            Stay connected with our Smart Transport System app! Track buses in
+            real-time, get accurate arrival times, and never miss a ride.
           </Text>
           <View
             style={{
@@ -67,13 +68,6 @@ export default function Onboarding({navigation}) {
               height: 14,
             }}
           />
-     
-          <TouchableOpacity
-            onPress={() => {
-              navigation.replace("DriverLogin")
-            }}>
-            <Button Text={'Sign In as Driver'} />
-          </TouchableOpacity>
         </ImageBackground>
       </View>
     </ScrollView>
