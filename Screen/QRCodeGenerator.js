@@ -8,14 +8,38 @@ import {
 } from 'react-native';
 import React from 'react';
 // import {RNCamera} from 'react-native-camera';
-// import QRCodeScanner from 'react-native-qrcode-scanner';
+import QRCodeScanner from 'react-native-qrcode-scanner';
 import QRCode from 'react-native-qrcode-svg';
-export default function QRCodeGenerator({navigation,route}) {
+import axios from 'axios';
+import url from '../url.json';
+export default function QRCodeGenerator({navigation, route}) {
   const [scannedData, setScannedData] = React.useState('');
   const {student_email} = route.params;
-const [storedemailQr ,  setstoredemailQr] = React.useState('');
+
+  const [storedemailQr, setstoredemailQr] = React.useState('');
   const onBarcodeRead = e => {
     setScannedData(e.data);
+  };
+  const Verify = val => {
+    const options = {
+      method: 'GET',
+      url: `http://${url.baseurl}:3000/User/verify_student`,
+      params: {email: val},
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        if (response.data.status) {
+          alert('User Are Verifed');
+        } else {
+          alert('User Not Existed');
+        }
+      })
+      .catch(function (error) {
+        console.error(error);
+        alert('User Not Existed');
+      });
   };
   return (
     <View
@@ -65,39 +89,30 @@ const [storedemailQr ,  setstoredemailQr] = React.useState('');
             Scan QR Code For Authentication
           </Text>
         </View>
-      <View>
-      {/* <QRCodeScanner
-        onRead={({data})=> alert(data)}
-       reactivate={true}
-       reactivateTimeout={500}
-       showMarker={true}
-
-       topContent={
         <View>
-
-        </View>
-       }
-      /> */}
-      <View
-      style={{
-        height:60
-      }}
-      />
-      <View
-      style={{
-        alignSelf:"center",
-        
-      }}
-      >
-
-       <QRCode
+          <QRCodeScanner
+            onRead={({data}) => Verify(data)}
+            reactivate={true}
+            reactivateTimeout={500}
+            showMarker={true}
+            topContent={<View></View>}
+          />
+          <View
+            style={{
+              height: 60,
+            }}
+          />
+          <View
+            style={{
+              alignSelf: 'center',
+            }}>
+            {/* <QRCode
       value={student_email}
       // logo={logoFromFile}
       size={200}
-    />
-      </View>
-
-      </View>
+    /> */}
+          </View>
+        </View>
       </View>
     </View>
   );

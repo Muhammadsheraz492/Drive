@@ -24,7 +24,6 @@ const Example = ({route}) => {
   const [loading, setLoading] = useState(true);
   const [checkclick, setcheckclick] = useState(false);
   const [coordinates, setcoordinates] = useState([]);
-  const [Curentcoordinates, setCurentcoordinates] = useState([]);
   const [Student, setStudent] = useState([]);
   const [status, setstatus] = useState(false);
   const {driver_email, student_email} = route.params;
@@ -58,18 +57,10 @@ const Example = ({route}) => {
     Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
-        const d = [{latitude: latitude, longitude: longitude}];
-        setCurentcoordinates(d);
-        // console.log('hi ', latitude, longitude);
-        // setcoordinates(coordinates => [
-        //   {
-        //     latitude: latitude,
-        //     longitude: longitude,
-        //   },
-        //   ...coordinates,
-        // ]);
-        // UpdatedLocation(latitude,longitude)
-        setLoading(false);
+        // setCurrentLocation({ latitude, longitude });
+        console.log('hi ', latitude, longitude);
+
+        UpdatedLocation(latitude, longitude);
       },
       error => {
         console.error('Error:', error);
@@ -119,11 +110,9 @@ const Example = ({route}) => {
     axios
       .request(config)
       .then(response => {
-        // console.log(response.data.message[0].destination[1]);
-
-        setcoordinates(response.data.message[0].destination[1]);
+        setcoordinates(response.data.message[0].destination);
+        console.log(JSON.stringify(response.data.message[0].destination));
         GetStudentLotion();
-        // console.log(JSON.stringify(response.data.message[0].destination));
       })
       .catch(error => {
         console.log(error);
@@ -142,34 +131,28 @@ const Example = ({route}) => {
       .then(response => {
         console.log(JSON.stringify(response.data));
         setStudent(response.data.message);
-        getCurrentLocation();
-        // setLoading(false);
+        setLoading(false);
       })
       .catch(error => {
         console.log(error.response);
       });
   };
-
-  const student_status = () => {
-    const options = {
-      method: 'GET',
-      url: `http://${Url.baseurl}:3000/User/student_status`,
-      params: {email: student_email},
-    };
-
-    axios
-      .request(options)
-      .then(function (response) {
-        // console.log(response.data.status);
-        setcheckclick(response.data.status);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-  };
+  // setTimeout(() => {
+  //   console.log('hello');
+  //   GetData();
+  // }, 8000);
 
   useEffect(() => {
     GetData();
+  }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      GetData();
+    }, 8000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
   return (
     <View style={styles.container}>
@@ -218,17 +201,24 @@ const Example = ({route}) => {
                     },
                   });
                 }}
-                onError={errorMessage => {}}
+                onError={errorMessage => {
+                  // console.log('GOT AN ERROR');
+                }}
               />
             )}
+            <Marker
+              key={`Initial `}
+              coordinate={coordinates[1]}
+              title={`Destination`}
+            />
 
-            {/* <Marker
+            <Marker
               key={`Destination`}
-              coordinate={coordinates[coordinates.length - 1]}
-              title={`Marker $`}
+              coordinate={coordinates[0]}
+              title={`Destination $`}
               pinColor="#FF0000"
-            /> */}
-
+            />
+            {/* {Student.map(index => ( */}
             {Student.map((item, index) => (
               <Marker
                 key={`Destination${index}`}
@@ -237,23 +227,7 @@ const Example = ({route}) => {
                 pinColor="green"
               />
             ))}
-            {/* {coordinates.map(index =>
-              console.log(index),
-              // <Marker
-              //   key={`Destination${index}`}
-              //   coordinate={coordinates[index]}
-              //   title={`Student`}
-              //   pinColor="green"
-              // />
-            )} */}
-            {Curentcoordinates.map((item, index) => (
-              <Marker
-                key={`Start${index}`}
-                coordinate={Curentcoordinates[index]}
-                title={`Student`}
-                pinColor="green"
-              />
-            ))}
+            {/* // ))} */}
           </MapView>
         </>
       )}
