@@ -15,25 +15,24 @@ const MyComponent = () => {
     try {
       const value = await AsyncStorage.getItem('driverstatus');
       if (value != null) {
-        console.log(JSON.parse(value).Email);
-        const options = {
-          method: 'POST',
-          url: `http://${url.baseurl}:3000/User/update_location`,
-          data: {
-            email: JSON.parse(value).Email,
-            latitude: val1,
-            longitude: val2,
-          },
-        };
-
-        axios
-          .request(options)
-          .then(function (response) {
-            console.log(response.data);
-          })
-          .catch(function (error) {
-            console.error(error);
-          });
+        // // console.log(JSON.parse(value).Email);
+        // const options = {
+        //   method: 'POST',
+        //   url: `http://${url.baseurl}:3000/User/update_location`,
+        //   data: {
+        //     email: JSON.parse(value).Email,
+        //     latitude: val1,
+        //     longitude: val2,
+        //   },
+        // };
+        // axios
+        //   .request(options)
+        //   .then(function (response) {
+        //     // console.log(response.data);
+        //   })
+        //   .catch(function (error) {
+        //     console.error(error);
+        //   });
         // console.log(value);
         // setStoredUsername(value);
         // setinitialRouteName("Maindriver")
