@@ -99,7 +99,7 @@ export default function Login({navigation}) {
   const GetData = () => {
     const options = {
       method: 'POST',
-      url: `http://${url.baseurl}:3000/User/login`,
+      url: `https://${url.baseurl}/User/login`,
       data: {
         email: username,
         password: password,

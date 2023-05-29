@@ -79,7 +79,7 @@ const Example = ({route}) => {
     // console.log(latitude);
     const options = {
       method: 'POST',
-      url: `http://${url.baseurl}:3000/User/update_Student_location`,
+      url: `https://${url.baseurl}/User/update_Student_location`,
       data: {
         email: student_email,
         latitude: Sherazlat,
@@ -106,7 +106,7 @@ const Example = ({route}) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://${Url.baseurl}:3000/User/bas_current_location?email=${driver_email}`,
+      url: `https://${Url.baseurl}/User/bas_current_location?email=${driver_email}`,
       headers: {},
     };
 
@@ -125,7 +125,7 @@ const Example = ({route}) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://${Url.baseurl}:3000/User/all_Student_location`,
+      url: `https://${Url.baseurl}/User/all_Student_location`,
       headers: {},
     };
 
@@ -144,7 +144,7 @@ const Example = ({route}) => {
   const student_status = () => {
     const options = {
       method: 'GET',
-      url: `http://${Url.baseurl}:3000/User/student_status`,
+      url: `https://${Url.baseurl}/User/student_status`,
       params: {email: student_email},
     };
 
@@ -163,7 +163,7 @@ const Example = ({route}) => {
     setstatus(true);
     const options = {
       method: 'GET',
-      url: `http://${Url.baseurl}:3000/User/cancel_user`,
+      url: `https://${Url.baseurl}/User/cancel_user`,
       params: {email: student_email},
     };
 

@@ -54,7 +54,7 @@ export default function MainScreen({navigation}) {
   useEffect(() => {
     const options = {
       method: 'GET',
-      url: `http://${url.baseurl}:3000/User/routes`,
+      url: `https://${url.baseurl}/User/routes`,
     };
 
     axios
