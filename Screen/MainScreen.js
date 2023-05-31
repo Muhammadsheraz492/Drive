@@ -51,6 +51,8 @@ export default function MainScreen({navigation}) {
       console.log('Error session null : ', error);
     }
   };
+
+  
   useEffect(() => {
     const options = {
       method: 'GET',
