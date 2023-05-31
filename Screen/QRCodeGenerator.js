@@ -23,7 +23,7 @@ export default function QRCodeGenerator({navigation, route}) {
   const Verify = val => {
     const options = {
       method: 'GET',
-      url: `http://${url.baseurl}:3000/User/verify_student`,
+      url: `https://stsu.herokuapp.com/User/verify_student`,
       params: {email: val},
     };
 

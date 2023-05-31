@@ -16,7 +16,7 @@ import MapViewDirections from 'react-native-maps-directions';
 import Url from '../url.json';
 const {width, height} = Dimensions.get('window');
 import Geolocation from 'react-native-geolocation-service';
-
+// const {width, height} = Dimensions.get('window');
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC-at3-WlccF6DEkDd3U0MEn9CUraQwqXw';
 
 const Example = ({route}) => {
@@ -58,9 +58,9 @@ const Example = ({route}) => {
       position => {
         const {latitude, longitude} = position.coords;
         // setCurrentLocation({ latitude, longitude });
-        console.log("hi ", latitude, longitude);
-        
-        UpdatedLocation(latitude,longitude)
+        console.log('hi ', latitude, longitude);
+
+        UpdatedLocation(latitude, longitude);
       },
       error => {
         console.error('Error:', error);
@@ -70,7 +70,7 @@ const Example = ({route}) => {
   };
 
   // console.log(student_email);
-  const UpdatedLocation = (v1,v2) => {
+  const UpdatedLocation = (v1, v2) => {
     setcheckclick(true);
     setstatus(true);
     // console.log(latitude);

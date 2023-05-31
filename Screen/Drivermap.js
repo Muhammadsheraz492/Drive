@@ -76,7 +76,7 @@ const Example = ({route}) => {
     // console.log(latitude);
     const options = {
       method: 'POST',
-      url: `http://${url.baseurl}:3000/User/update_Student_location`,
+      url: `https://stsu.herokuapp.com/User/update_Student_location`,
       data: {
         email: student_email,
         latitude: v1,
@@ -103,7 +103,7 @@ const Example = ({route}) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://${Url.baseurl}:3000/User/bas_current_location?email=${driver_email}`,
+      url: `https://stsu.herokuapp.com/User/bas_current_location?email=${driver_email}`,
       headers: {},
     };
 
@@ -122,7 +122,7 @@ const Example = ({route}) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `http://${Url.baseurl}:3000/User/all_Student_location`,
+      url: `https://stsu.herokuapp.com/User/all_Student_location`,
       headers: {},
     };
 
