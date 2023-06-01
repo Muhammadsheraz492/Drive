@@ -16,15 +16,18 @@ import MapViewDirections from 'react-native-maps-directions';
 import Url from '../url.json';
 const {width, height} = Dimensions.get('window');
 import Geolocation from 'react-native-geolocation-service';
+import {useNavigation} from '@react-navigation/native';
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC-at3-WlccF6DEkDd3U0MEn9CUraQwqXw';
 
 const Example = ({route}) => {
+  let navigation = useNavigation();
   const mapViewRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [checkclick, setcheckclick] = useState(false);
   const [coordinates, setcoordinates] = useState([]);
   const [Student, setStudent] = useState([]);
+  const [Stops, SetStops] = useState([]);
   const [status, setstatus] = useState(false);
   const [Sherazlat, setSherazlat] = useState('');
   const [Sherazlong, setSherazlong] = useState('');
@@ -60,7 +63,7 @@ const Example = ({route}) => {
       position => {
         const {latitude, longitude} = position.coords;
         // setCurrentLocation({ latitude, longitude });
-        console.log('hi ', latitude, longitude);
+        // console.log('hi ', latitude, longitude);
         setSherazlat(latitude);
         setSherazlong(longitude);
         // UpdatedLocation(latitude,longitude)
@@ -114,7 +117,7 @@ const Example = ({route}) => {
       .request(config)
       .then(response => {
         setcoordinates(response.data.message[0].destination);
-        console.log(JSON.stringify(response.data.message[0].destination));
+        // console.log(JSON.stringify(response.data.message[0].destination));
         GetStudentLotion();
       })
       .catch(error => {
@@ -132,7 +135,7 @@ const Example = ({route}) => {
     axios
       .request(config)
       .then(response => {
-        console.log(JSON.stringify(response.data));
+        // console.log(JSON.stringify(response.data));
         setStudent(response.data.message);
         setLoading(false);
       })
@@ -155,7 +158,7 @@ const Example = ({route}) => {
         setcheckclick(response.data.status);
       })
       .catch(function (error) {
-        console.error(error);
+        // console.error(error);
       });
   };
 
@@ -181,14 +184,35 @@ const Example = ({route}) => {
         setstatus(false);
       });
   };
+  const GetStop = () => {
+    console.log('Shop');
+    const options = {
+      method: 'GET',
+      url: 'http://192.168.100.23:3000/Admin/Get_stops',
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data.data);
+        SetStops(response.data.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  };
   useEffect(() => {
-    GetData();
-    student_status();
+    navigation.addListener('focus', () => {
+      GetData();
+      student_status();
+      GetStop();
+    });
   }, []);
   useEffect(() => {
     const interval = setInterval(() => {
       GetData();
       student_status();
+      GetStop();
     }, 8000);
 
     return () => {
@@ -213,7 +237,7 @@ const Example = ({route}) => {
             style={StyleSheet.absoluteFill}
             ref={mapViewRef}
             // zoomEnabled={false}
-            maxZoomLevel={10}>
+            maxZoomLevel={12}>
             {coordinates.length > 0 && (
               <MapViewDirections
                 origin={coordinates[0]}
@@ -266,6 +290,14 @@ const Example = ({route}) => {
                 coordinate={Student[index]}
                 title={`Student`}
                 pinColor="green"
+              />
+            ))}
+            {Stops.map((item, index) => (
+              <Marker
+                key={`Stop ${index}`}
+                coordinate={Stops[index]}
+                title={`Stop ${index + 1}`}
+                pinColor="orange"
               />
             ))}
             {/* // ))} */}
