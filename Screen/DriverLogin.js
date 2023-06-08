@@ -8,7 +8,6 @@ import {
   StatusBar,
   ScrollView,
   LogBox,
-
 } from 'react-native';
 import React from 'react';
 import Button from '../Components/Button';

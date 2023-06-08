@@ -65,6 +65,7 @@ export default function MainScreen({navigation}) {
         setdata(response.data.message);
         setoriginalData(response.data.message);
         retrieveData();
+        // console.log(response.data);
       })
       .catch(function (error) {
         console.error(error);
@@ -135,12 +136,12 @@ export default function MainScreen({navigation}) {
                 onPress={() => {
                   navigation.navigate('Notification');
                 }}>
-                {/* <ImageBackground
+                <ImageBackground
                   source={require('../assest/Notification.png')}
                   style={{
                     width: 23,
                     height: 23,
-                  }}></ImageBackground> */}
+                  }}></ImageBackground>
               </TouchableOpacity>
             </View>
             <View
@@ -227,6 +228,13 @@ export default function MainScreen({navigation}) {
                 Total Buses: {data.length}
               </Text>
             </View>
+            <View
+            
+            style={{
+              height:"70%"
+            }}
+            >
+
             {data.length >= 1 ? (
               <FlatList
                 data={data}
@@ -261,6 +269,7 @@ export default function MainScreen({navigation}) {
                               driver_email: item.driver_email,
                               student_email: storedEmail,
                             });
+                            console.log(item);
                           }}>
                           <Text
                             style={{
@@ -289,12 +298,7 @@ export default function MainScreen({navigation}) {
                             width: 36,
                             height: 36,
                           }}></ImageBackground>
-                        {/* <Modal1
-                  // morning={item.schedule.morning}
-                  // morningto={item.schedule.morningto}
-                  // evening={item.schedule.evening}
-                  // eveningto={item.schedule.eveningto}
-                  /> */}
+                       
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -310,6 +314,8 @@ export default function MainScreen({navigation}) {
                 <Text>Today is no Bases on Routes</Text>
               </View>
             )}
+            </View>
+
             <View
               style={{
                 height: 70,

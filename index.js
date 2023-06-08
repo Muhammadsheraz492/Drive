@@ -21,7 +21,6 @@ async function onDisplayNotification(val1, val2) {
       id: 'default',
       name: 'Default Channel',
     });
-
     const notification = {
       title: val2,
       body: val1,
@@ -59,8 +58,28 @@ messaging().onMessage(async remoteMessage => {
   onDisplayNotification(
     remoteMessage.notification.body,
     remoteMessage.notification.title,
-  );
-  //   console.log('Foreground notification:', remoteMessage);
+    );
+    storeData(remoteMessage.notification.body,remoteMessage.notification.title,)
+    console.log('Foreground notification:', remoteMessage);
 });
-
+const storeData = async (body, title) => {
+  // console.log(email);
+  const data = {
+    title: title,
+    body: body,
+  };
+  try {
+    AsyncStorage.setItem('notification', JSON.stringify(data))
+      .then(() => {
+        console.log('Data stored successfully');
+        // AsyncStorage.removeItem('userstatus');
+        // AsyncStorage.setItem('userstatus', '');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  } catch (error) {
+    console.log('Error storing data: ', error);
+  }
+};
 AppRegistry.registerComponent(appName, () => App);

@@ -13,7 +13,6 @@ import url from '../url.json';
 
 import MapView, {Marker} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import Url from '../url.json';
 const {width, height} = Dimensions.get('window');
 import Geolocation from 'react-native-geolocation-service';
 import {useNavigation} from '@react-navigation/native';
@@ -109,7 +108,7 @@ const Example = ({route}) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://${Url.baseurl}/User/bas_current_location?email=${driver_email}`,
+      url: `https://${url.baseurl}/User/bas_current_location?email=${driver_email}`,
       headers: {},
     };
 
@@ -128,7 +127,7 @@ const Example = ({route}) => {
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://${Url.baseurl}/User/all_Student_location`,
+      url: `https://${url.baseurl}/User/all_Student_location`,
       headers: {},
     };
 
@@ -147,7 +146,7 @@ const Example = ({route}) => {
   const student_status = () => {
     const options = {
       method: 'GET',
-      url: `https://${Url.baseurl}/User/student_status`,
+      url: `https://${url.baseurl}/User/student_status`,
       params: {email: student_email},
     };
 
@@ -166,7 +165,7 @@ const Example = ({route}) => {
     setstatus(true);
     const options = {
       method: 'GET',
-      url: `https://${Url.baseurl}/User/cancel_user`,
+      url: `https://${url.baseurl}/User/cancel_user`,
       params: {email: student_email},
     };
 
@@ -188,7 +187,7 @@ const Example = ({route}) => {
     console.log('Shop');
     const options = {
       method: 'GET',
-      url: 'http://192.168.100.23:3000/Admin/Get_stops',
+      url: `https://${url.baseurl}/Admin/Get_stops`,
     };
 
     axios
