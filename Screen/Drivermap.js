@@ -195,7 +195,7 @@ const SpeedUpload=(speed)=>{
             style={StyleSheet.absoluteFill}
             ref={mapViewRef}
             // zoomEnabled={false}
-            maxZoomLevel={12}>
+            maxZoomLevel={15}>
             {coordinates.length > 0 && (
               <MapViewDirections
                 origin={coordinates[0]}
