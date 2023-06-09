@@ -4,14 +4,49 @@ import {
   ImageBackground,
   TouchableOpacity,
   Alert,
+  Modal,
+  StyleSheet,
+  ActivityIndicator,
+  
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 // import { TouchableOpacity } from 'react-native/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import  axios from 'axios';
 
 export default function Maindriver({navigation}) {
   const [storedUsername, setStoredUsername] = React.useState('');
   const [storedEmail, setStoredEmail] = React.useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+const Emergency =()=>{
+  openModal();
+  
+  let config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: `https://stsu.herokuapp.com/Admin/Emergency?email=${storedEmail}`,
+    headers: { }
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+    closeModal()
+    Alert.alert("STS",response.data.message)
+  })
+  .catch((error) => {
+    console.log(error);
+    closeModal()
+
+  });
+}
 
   const retrieveData = async () => {
     try {
@@ -74,7 +109,6 @@ export default function Maindriver({navigation}) {
             driver_email: storedEmail,
           });
         }}
-        //
         style={{
           width: '70%',
           alignSelf: 'center',
@@ -118,7 +152,6 @@ export default function Maindriver({navigation}) {
             driver_email: storedEmail,
           });
         }}
-        //
         style={{
           width: '70%',
           alignSelf: 'center',
@@ -216,11 +249,22 @@ export default function Maindriver({navigation}) {
               text: 'Sure',
               onPress: () => {
                 // Logic for handling the sure action
+                Emergency()
                 console.log('Sure button pressed');
               },
             },
           ]);
         }}>
+        <Modal visible={modalVisible} animationType="slide" transparent={true}>
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <View style={styles.activityIndicatorContainer}>
+              <ActivityIndicator size="large" color="blue" />
+
+
+            </View>
+          </View>
+        </Modal>
         <View
           style={{
             width: '100%',
@@ -246,6 +290,49 @@ export default function Maindriver({navigation}) {
               marginLeft: 10,
             }}>
             Alert
+          </Text>
+        </View>
+      </TouchableOpacity>
+      <View
+        style={{
+          height: 20,
+        }}
+      />
+      <TouchableOpacity
+        onPress={() => {
+          // navigation.navigate('QRCodeGenerator', {
+          //   driver_email: storedEmail,
+          // });
+        }}
+        style={{
+          width: '70%',
+          alignSelf: 'center',
+        }}>
+        <View
+          style={{
+            width: '100%',
+            height: 52,
+            backgroundColor: '#FFB800',
+            borderRadius: 15,
+            // justifyContent:"center",
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <ImageBackground
+            source={require('../assest/busroute.png')}
+            style={{
+              marginLeft: 20,
+              width: 30,
+              height: 30,
+            }}></ImageBackground>
+          <Text
+            style={{
+              fontSize: 20,
+              color: '#fff',
+              fontWeight: '800',
+              marginLeft: 10,
+            }}>
+            Return
           </Text>
         </View>
       </TouchableOpacity>
@@ -288,6 +375,31 @@ export default function Maindriver({navigation}) {
           </Text>
         </View>
       </TouchableOpacity>
+      
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  activityIndicatorContainer: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+  },
+
+  input: {
+    // borderWidth: 1,
+    borderColor: '#FFB800',
+    borderRadius: 5,
+    // padding: 10,
+    //   margin: 10,
+
+    // height: 53,
+    height: 44,
+
+    width: '93%',
+    marginLeft: 5,
+    color: '#000000',
+  },
+});

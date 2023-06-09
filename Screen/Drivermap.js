@@ -13,7 +13,6 @@ import url from '../url.json';
 
 import MapView, {Marker} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import Url from '../url.json';
 const {width, height} = Dimensions.get('window');
 import Geolocation from 'react-native-geolocation-service';
 
@@ -33,9 +32,33 @@ const Example = ({route}) => {
 
   const LATITUDE_DELTA = 0.1922;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+  const currentDate = new Date();
+  const currentDateString = currentDate.toDateString();
+  const currentTimeString = currentDate.toLocaleTimeString();
   useEffect(() => {
     requestLocationPermission();
   }, []);
+const SpeedUpload=(speed)=>{
+
+
+  let config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: `https://stsu.herokuapp.com/Admin/Over_Speed?email=${driver_email}&speed=${speed}`,
+    headers: { }
+  };
+  
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}
+
+
+
 
   const requestLocationPermission = async () => {
     try {
@@ -58,7 +81,7 @@ const Example = ({route}) => {
       position => {
         const {latitude, longitude} = position.coords;
         // setCurrentLocation({ latitude, longitude });
-        console.log('hi ', latitude, longitude);
+        // console.log('hi ', latitude, longitude);
 
         UpdatedLocation(latitude, longitude);
       },
@@ -111,7 +134,7 @@ const Example = ({route}) => {
       .request(config)
       .then(response => {
         setcoordinates(response.data.message[0].destination);
-        console.log(JSON.stringify(response.data.message[0].destination));
+        // console.log("Hi hassam ",JSON.stringify(response.data));
         GetStudentLotion();
       })
       .catch(error => {
@@ -129,7 +152,7 @@ const Example = ({route}) => {
     axios
       .request(config)
       .then(response => {
-        console.log(JSON.stringify(response.data));
+        // console.log(JSON.stringify(response.data));
         setStudent(response.data.message);
         setLoading(false);
       })
@@ -172,7 +195,7 @@ const Example = ({route}) => {
             style={StyleSheet.absoluteFill}
             ref={mapViewRef}
             // zoomEnabled={false}
-            maxZoomLevel={10}>
+            maxZoomLevel={12}>
             {coordinates.length > 0 && (
               <MapViewDirections
                 origin={coordinates[0]}
@@ -185,13 +208,23 @@ const Example = ({route}) => {
                 strokeColor="blue"
                 optimizeWaypoints={true}
                 onStart={params => {
-                  console.log(
-                    `Started routing between "${params.origin}" and "${params.destination}"`,
-                  );
+                  // console.log(
+                  //   `Started routing between "${params.origin}" and "${params.destination}"`,
+                  // );
                 }}
                 onReady={result => {
+                   console.log(`Speed: ${result.fares}`);
                   console.log(`Distance: ${result.distance} km`);
-                  console.log(`Duration: ${result.duration} min.`);
+
+                  const speed =
+                    (result.distance * 1000) / (result.duration * 60);
+                  if (speed >= 30 ) {
+                    console.log(speed,"MeterPerSecond");
+                    SpeedUpload(speed)
+                  } else{
+                    null;
+                  }
+                  // console.log(`Duration: ${result.duration} min.`);
                   mapViewRef.current.fitToCoordinates(result.coordinates, {
                     edgePadding: {
                       right: width / 20,
@@ -202,7 +235,7 @@ const Example = ({route}) => {
                   });
                 }}
                 onError={errorMessage => {
-                  // console.log('GOT AN ERROR');
+                  console.log('GOT AN ERROR');
                 }}
               />
             )}

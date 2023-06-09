@@ -110,7 +110,7 @@ export default function DriverLogin({navigation}) {
     axios
       .request(options)
       .then(function (response) {
-        console.log(response.data);
+        // console.log(response.data);
         if (response.data.status == true) {
           // navigation.navigate('Maindriver');
           // console.log(response.data.username);
@@ -118,7 +118,7 @@ export default function DriverLogin({navigation}) {
 
           // alert(response.data.message);
         } else {
-          alert('Username and password wrong!');
+          alert('Please try to contact your admin');
           setloader(false);
         }
       })

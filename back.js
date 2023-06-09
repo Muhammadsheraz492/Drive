@@ -33,10 +33,10 @@ const MyComponent = () => {
           .catch(function (error) {
             console.error(error);
           });
-        console.log(value);
+        // console.log(value);
         // setStoredUsername(value);
         // setinitialRouteName("Maindriver")
-        console.log(JSON.parse(value));
+        // console.log(JSON.parse(value));
         // setIsLoading(false)
       } else {
         console.log('NUll');
