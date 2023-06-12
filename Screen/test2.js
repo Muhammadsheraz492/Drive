@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   PermissionsAndroid,
+  Image,
 } from 'react-native';
 import url from '../url.json';
 
@@ -274,8 +275,14 @@ const Example = ({route}) => {
               key={`Initial `}
               coordinate={coordinates[0]}
               title={`Marker $`}
-            />
-
+              // image={}
+              
+            >
+                  <Image
+          source={require('../assest/Bas.png')}
+          style={{ width: 40, height: 40 }}
+        />
+    </Marker>
             <Marker
               key={`Destination`}
               coordinate={coordinates[coordinates.length - 1]}
@@ -283,21 +290,26 @@ const Example = ({route}) => {
               pinColor="#FF0000"
             />
             {/* {Student.map(index => ( */}
-            {Student.map((item, index) => (
+            {/* {Student.map((item, index) => (
               <Marker
                 key={`Destination${index}`}
                 coordinate={Student[index]}
                 title={`Student`}
                 pinColor="green"
               />
-            ))}
+            ))} */}
             {Stops.map((item, index) => (
               <Marker
                 key={`Stop ${index}`}
                 coordinate={Stops[index]}
                 title={`Stop ${index + 1}`}
                 pinColor="orange"
-              />
+              >
+                      <Image
+          source={require('../assest/Stops.png')}
+          style={{ width: 40, height: 40 }}
+        />
+    </Marker>
             ))}
             {/* // ))} */}
           </MapView>
