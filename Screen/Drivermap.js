@@ -16,6 +16,7 @@ import MapView, {Marker} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 const {width, height} = Dimensions.get('window');
 import Geolocation from 'react-native-geolocation-service';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC-at3-WlccF6DEkDd3U0MEn9CUraQwqXw';
 
@@ -37,6 +38,7 @@ const Example = ({route}) => {
   const currentDateString = currentDate.toDateString();
   const currentTimeString = currentDate.toLocaleTimeString();
   const [Stops, SetStops] = useState([]);
+  const [textdata,settextdata]=useState("Demo");
   useEffect(() => {
     requestLocationPermission();
   }, []);
@@ -153,6 +155,10 @@ const SpeedUpload=(speed)=>{
       .request(config)
       .then(response => {
         setcoordinates(response.data.message[0].destination);
+        if (response.data.message[0].destination[0].latitude>=response.data.message[0].destination[0].latitude&&response.data.message[0].destination[0].latitude<=response.data.message[0].destination[0].latitude+100) {
+          console.log(response.data.message[0].destination[0].latitude);
+          loadFlagValue();
+        }
         // console.log("Hi hassam ",JSON.stringify(response.data));
         GetStudentLotion();
       })
@@ -183,7 +189,68 @@ const SpeedUpload=(speed)=>{
   //   console.log('hello');
   //   GetData();
   // }, 8000);
+  const toggleFlag2 = async (val) => {
+    try {
+    
+      await AsyncStorage.setItem('flag', JSON.stringify(val));
+    } catch (error) {
+      console.error('Error toggling flag2 value:', error);
+    }
+  };
+  const Dispach=()=>{
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `http://stsu.herokuapp.com/Admin/Dispatch?email=${driver_email}`,
+      headers: { }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  const Arival=()=>{
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `http://stsu.herokuapp.com/Admin/Update_Arival?email=${driver_email}`,
+      headers: { }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  const loadFlagValue = async () => {
+    try {
+      const value = await AsyncStorage.getItem('flag');
+      console.log(typeof value);
+      if (value=="true") {
+        // settextdata("Arival TIme");
+        Arival();
+        toggleFlag2(false)
+        // setIsFlagSet(JSON.parse(value));
+      }else{
+        // settextdata("Despacture");
+        Dispach();
 
+        setTimeout(() => {
+          toggleFlag2(true);
+          
+        }, 120000);
+      }
+    } catch (error) {
+      console.error('Error loading flag value:', error);
+    }
+  };
   useEffect(() => {
     GetData();
     GetStop();
@@ -300,6 +367,10 @@ const SpeedUpload=(speed)=>{
             ))}
             {/* // ))} */}
           </MapView>
+          {/* <View>
+            <Text>{textdata}</Text>
+            <Text>{coordinates[0].latitude}</Text>
+          </View> */}
         </>
       )}
     </View>

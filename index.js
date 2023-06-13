@@ -15,6 +15,7 @@ import MyComponent from './back';
 import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
 import Url from './url.json';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Cancel = () => {
   alert('Okey');
   //   const config = {
@@ -84,7 +85,44 @@ messaging().onMessage(async remoteMessage => {
     remoteMessage.notification.body,
     remoteMessage.notification.title,
   );
+  Store(remoteMessage.notification.body, remoteMessage.notification.title,)
   //   console.log('Foreground notification:', remoteMessage);
 });
-
+const Store = (body, title) => {
+  console.log(body);
+  const data = {
+    title: title,
+    body: body,
+  };
+  AsyncStorage.getItem('notification')
+    .then(arrayString => {
+      if (arrayString) {
+        const retrievedArray = JSON.parse(arrayString);
+        // Perform the push operation on the retrieved array
+        retrievedArray.push(data);
+        // Store the updated array back in AsyncStorage
+        AsyncStorage.setItem('notification', JSON.stringify(retrievedArray))
+          .then(() => {
+            console.log('Item added to the array and stored successfully.');
+          })
+          .catch(error => {
+            console.log('Error storing updated array:', error);
+          });
+      } else {
+        let temp = [];
+        temp.push(data);
+        AsyncStorage.setItem('notification', JSON.stringify(temp))
+          .then(() => {
+            console.log('Item added to the array and stored successfully.');
+          })
+          .catch(error => {
+            console.log('Error storing updated array:', error);
+          });
+        // console.log('Array not found in AsyncStorage.');
+      }
+    })
+    .catch(error => {
+      console.log('Error retrieving array:', error);
+    });
+};
 AppRegistry.registerComponent(appName, () => MyComponent);

@@ -47,6 +47,28 @@ const Emergency =()=>{
 
   });
 }
+const UpdateDriverRoute=()=>{
+  openModal();
+let config = {
+  method: 'get',
+  maxBodyLength: Infinity,
+  // url: 'http://127.0.0.1:3000/Admin/return?email=driver123@gmail.com',
+  url: `https://stsu.herokuapp.com/Admin/return?email=${storedEmail}`,
+  headers: { }
+};
+
+axios.request(config)
+.then((response) => {
+  console.log(JSON.stringify(response.data));
+  closeModal()
+
+})
+.catch((error) => {
+  console.log(error);
+  closeModal()
+
+});
+}
 
   const retrieveData = async () => {
     try {
@@ -184,7 +206,7 @@ const Emergency =()=>{
           </Text>
         </View>
       </TouchableOpacity>
-      {/* <View
+      <View
         style={{
           height: 20,
         }}
@@ -195,7 +217,7 @@ const Emergency =()=>{
           alignSelf: 'center',
         }}
         onPress={() => {
-          navigation.navigate('DriverNotification');
+          navigation.navigate('Notification');
         }}>
         <View
           style={{
@@ -224,7 +246,7 @@ const Emergency =()=>{
             Notification
           </Text>
         </View>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
       <View
         style={{
           height: 20,
@@ -303,6 +325,7 @@ const Emergency =()=>{
           // navigation.navigate('QRCodeGenerator', {
           //   driver_email: storedEmail,
           // });
+          UpdateDriverRoute()
         }}
         style={{
           width: '70%',

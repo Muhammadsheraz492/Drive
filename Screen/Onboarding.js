@@ -1,88 +1,135 @@
-import React, {useEffect} from 'react';
 import {
-  StyleSheet,
-  StatusBar,
-  Text,
   View,
+  Text,
+  StatusBar,
   ImageBackground,
-  Image,
+  StyleSheet,
   TouchableOpacity,
-  ScrollView,
+  FlatList,
 } from 'react-native';
-import Button from '../Components/Button';
+import React from 'react';
 
-export default function Onboarding({navigation}) {
-  const Data = require('../Data.json');
+export default function Notification({navigation}) {
+  const data = [
+    {
+      Notification:
+        'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
+      time: '2 hours ago',
+    },
+    {
+      Notification:
+        'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
+      time: '2 hours ago',
+    },
+    {
+      Notification:
+        'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
+      time: '2 hours ago',
+    },
+    {
+      Notification:
+        'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
+      time: '2 hours ago',
+    },
+  ];
+
   return (
-    <ScrollView>
+    <View
+      style={{
+        backgroundColor: '#FFB800',
+        flex: 1,
+        // marginTop:"10%",
+      }}>
+      <StatusBar backgroundColor={'#FFB800'} />
       <View
         style={{
-          height: 800,
+          backgroundColor: '#fff',
+          // flex:1,
+          height: '100%',
+          width: '100%',
+          borderTopLeftRadius: 40,
+
+          borderTopRightRadius: 40,
         }}>
-        <ImageBackground
-          source={require('../assest/Background.png')}
+        <View
           style={{
-            flex: 1,
+            width: '90%',
+            marginTop: 25,
+            flexDirection: 'row',
           }}>
-          <StatusBar backgroundColor={'#FFB800'} />
-
-          <ImageBackground
-            source={require('../assest/LOGO.png')}
-            style={{
-              width: 164,
-              marginTop: '20%',
-              height: 164,
-              alignSelf: 'center',
-              // justifyContent:"center"
-              // alignItems:"center"
-            }}></ImageBackground>
-          <View
-            style={{
-              height: '20%',
-            }}
-          />
-          <Text
-            style={{
-              fontSize: 15,
-              color: '#fff',
-              textAlign: 'center',
-              marginHorizontal: 20,
-            }}>
-           Stay connected with our Smart Transport System app! Track buses in real-time, get accurate arrival times, and never miss a ride.
-          </Text>
-          <View
-            style={{
-              height: '15%',
-            }}
-          />
-          {/* <TouchableOpacity
-            onPress={() => {
-              navigation.replace('Login');
-            }}>
-            <Button Text={'Sign In as Student'} />
-          </TouchableOpacity> */}
-
-          <View
-            style={{
-              height: 14,
-            }}
-          />
-     
           <TouchableOpacity
             onPress={() => {
-              navigation.replace("DriverLogin")
+              navigation.goBack();
             }}>
-            <Button Text={'Sign In as Driver'} />
+            <ImageBackground
+              source={require('../assest/back.png')}
+              style={{
+                width: 30,
+                height: 30,
+                marginLeft: 10,
+              }}></ImageBackground>
           </TouchableOpacity>
-        </ImageBackground>
+          <Text
+            style={{
+              fontSize: 19,
+              color: '#000000',
+              alignSelf: 'center',
+              marginLeft: '30%',
+              textAlign: 'center',
+            }}>
+            Notification
+          </Text>
+        </View>
+        <FlatList
+          data={data}
+          renderItem={({item}) => (
+            <View>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: '#000000',
+                  // textAlign:"center"
+                  marginTop: 20,
+                  paddingHorizontal: 20,
+                }}>
+                {item.Notification}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: '#FFB800',
+                  paddingHorizontal: 20,
+                }}>
+                {item.time}
+              </Text>
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#EEEEEE',
+                  marginTop: 10,
+                }}
+              />
+            </View>
+          )}
+        />
       </View>
-    </ScrollView>
+    </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
-    resizeMode: 'cover',
     flex: 1,
+  },
+  camera: {
+    flex: 1,
+  },
+  zeroContainer: {
+    height: 0,
+    flex: 0,
+  },
+  scannedData: {
+    alignSelf: 'center',
+    marginTop: 20,
+    fontSize: 16,
   },
 });

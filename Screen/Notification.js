@@ -7,31 +7,45 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Notification({navigation}) {
-  const data = [
-    {
-      Notification:
-        'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
-      time: '2 hours ago',
-    },
-    {
-      Notification:
-        'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
-      time: '2 hours ago',
-    },
-    {
-      Notification:
-        'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
-      time: '2 hours ago',
-    },
-    {
-      Notification:
-        'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
-      time: '2 hours ago',
-    },
-  ];
+  const [data,setdata] =useState( [
+    // {
+    //   Notification:
+    //     'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
+    //   time: '2 hours ago',
+    // },
+    // {
+    //   Notification:
+    //     'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
+    //   time: '2 hours ago',
+    // },
+    // {
+    //   Notification:
+    //     'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
+    //   time: '2 hours ago',
+    // },
+    // {
+    //   Notification:
+    //     'Lorem ipsum is placeholderefwrg text commonly used kidwhihe',
+    //   time: '2 hours ago',
+    // },
+  ]);
+  const GetNotification=()=>{
+    console.log("dsvh");
+    AsyncStorage.getItem('notification')
+    .then(arrayString => {
+      // console.log(arrayString);
+      const retrievedArray = JSON.parse(arrayString);
+      setdata(retrievedArray);
+    })
+  }
+  
+  useEffect(()=>{
+   GetNotification();
+  },[])
 
   return (
     <View
@@ -92,7 +106,7 @@ export default function Notification({navigation}) {
                   marginTop: 20,
                   paddingHorizontal: 20,
                 }}>
-                {item.Notification}
+                {item.title}
               </Text>
               <Text
                 style={{
@@ -100,7 +114,7 @@ export default function Notification({navigation}) {
                   color: '#FFB800',
                   paddingHorizontal: 20,
                 }}>
-                {item.time}
+                {item.body}
               </Text>
               <View
                 style={{
