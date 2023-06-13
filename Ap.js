@@ -35,10 +35,10 @@ function App() {
         // setStoredUsername(value);
         setinitialRouteName("MainScreen")
         // console.log(JSON.parse(value));
-        // setIsLoading(false)
+        setIsLoading(false)
       }else{
-        // setinitialRouteName("Onboarding")
-      //  setIsLoading(false)
+        setinitialRouteName("Onboarding")
+       setIsLoading(false)
 
 
       }
@@ -72,7 +72,7 @@ function App() {
 
   useEffect(()=>{
     retrieveData();
-    retrieveDatadriver();
+    // retrieveDatadriver();
   })
 
   
