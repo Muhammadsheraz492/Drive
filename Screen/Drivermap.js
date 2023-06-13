@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   PermissionsAndroid,
+  Image
 } from 'react-native';
 import url from '../url.json';
 
@@ -35,6 +36,7 @@ const Example = ({route}) => {
   const currentDate = new Date();
   const currentDateString = currentDate.toDateString();
   const currentTimeString = currentDate.toLocaleTimeString();
+  const [Stops, SetStops] = useState([]);
   useEffect(() => {
     requestLocationPermission();
   }, []);
@@ -74,6 +76,23 @@ const SpeedUpload=(speed)=>{
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+  const GetStop = () => {
+    console.log('Shop');
+    const options = {
+      method: 'GET',
+      url: `https://stsu.herokuapp.com/Admin/Get_stops`,
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data.data);
+        SetStops(response.data.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
   };
 
   const getCurrentLocation = () => {
@@ -167,6 +186,7 @@ const SpeedUpload=(speed)=>{
 
   useEffect(() => {
     GetData();
+    GetStop();
   }, []);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -218,12 +238,12 @@ const SpeedUpload=(speed)=>{
 
                   const speed =
                     (result.distance * 1000) / (result.duration * 60);
-                  if (speed >= 30 ) {
+                  // if (speed >= 30 ) {
                     console.log(speed,"MeterPerSecond");
                     SpeedUpload(speed)
-                  } else{
-                    null;
-                  }
+                  // } else{
+                    // null;
+                  // }
                   // console.log(`Duration: ${result.duration} min.`);
                   mapViewRef.current.fitToCoordinates(result.coordinates, {
                     edgePadding: {
@@ -243,7 +263,12 @@ const SpeedUpload=(speed)=>{
               key={`Initial `}
               coordinate={coordinates[1]}
               title={`Destination`}
-            />
+            >
+                            <Image
+          source={require('../assest/Bus.png')}
+          style={{ width: 40, height: 40 }}
+        />
+              </Marker>
 
             <Marker
               key={`Destination`}
@@ -251,6 +276,19 @@ const SpeedUpload=(speed)=>{
               title={`Destination $`}
               pinColor="#FF0000"
             />
+                   {Stops.map((item, index) => (
+              <Marker
+                key={`Stop ${index}`}
+                coordinate={Stops[index]}
+                title={`Stop ${index + 1}`}
+                pinColor="orange"
+              >
+                      <Image
+          source={require('../assest/Stops.png')}
+          style={{ width: 40, height: 40 }}
+        />
+    </Marker>
+            ))}
             {/* {Student.map(index => ( */}
             {Student.map((item, index) => (
               <Marker
