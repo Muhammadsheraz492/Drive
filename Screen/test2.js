@@ -290,14 +290,14 @@ const Example = ({route}) => {
               pinColor="#FF0000"
             />
             {/* {Student.map(index => ( */}
-            {/* {Student.map((item, index) => (
+            {Student.map((item, index) => (
               <Marker
                 key={`Destination${index}`}
                 coordinate={Student[index]}
                 title={`Student`}
                 pinColor="green"
               />
-            ))} */}
+            ))}
             {Stops.map((item, index) => (
               <Marker
                 key={`Stop ${index}`}
