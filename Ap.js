@@ -89,18 +89,18 @@ function App() {
       <Stack.Navigator
         initialRouteName={initialRouteName}
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Onboarding" component={Onboarding} />
+        {/* <Stack.Screen name="Onboarding" component={Onboarding} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
         <Stack.Screen name="QRCodeGenerator" component={QRCodeGenerator} />
 
-        <Stack.Screen name="Notification" component={Notification} />
-        <Stack.Screen name="Mapscreen" component={Mapscreen} />
+      <Stack.Screen name="Mapscreen" component={Mapscreen} /> */}
         <Stack.Screen name="DriverLogin" component={DriverLogin} />
         
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="Maindriver" component={Maindriver} />
-        <Stack.Screen name="DriverNotification" component={DriverNotification} />
+        {/* <Stack.Screen name="DriverNotification" component={DriverNotification} /> */}
+      <Stack.Screen name="Notification" component={Notification} />
         <Stack.Screen name="Drivermap" component={Drivermap} />
 
 

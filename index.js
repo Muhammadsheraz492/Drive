@@ -99,6 +99,9 @@ const Store = (body, title) => {
       if (arrayString) {
         const retrievedArray = JSON.parse(arrayString);
         // Perform the push operation on the retrieved array
+        let temp=[];
+        temp.push(data)
+        // temp.concat(retrievedArray)
         retrievedArray.push(data);
         // Store the updated array back in AsyncStorage
         AsyncStorage.setItem('notification', JSON.stringify(retrievedArray))

@@ -85,7 +85,7 @@ axios.request(config)
   };
   const sessionnull = async () => {
     try {
-      AsyncStorage.removeItem('driverstatus');
+     await  AsyncStorage.removeItem('driverstatus');
       navigation.replace('DriverLogin');
     } catch (error) {
       console.log('Error session null : ', error);
