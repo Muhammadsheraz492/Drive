@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -12,54 +12,54 @@ import {
 } from 'react-native';
 import url from '../url.json';
 
-import MapView, {Marker} from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC-at3-WlccF6DEkDd3U0MEn9CUraQwqXw';
 
-const Example = ({route}) => {
+const Example = ({ route }) => {
   const mapViewRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [checkclick, setcheckclick] = useState(false);
   const [coordinates, setcoordinates] = useState([]);
   const [Student, setStudent] = useState([]);
   const [status, setstatus] = useState(false);
-  const {driver_email, student_email} = route.params;
-  const LATITUDE = 12.23;
-  const LONGITUDE = 23.33;
+  const { driver_email, student_email } = route.params;
+  const LATITUDE = 54.23;
+  const LONGITUDE = .33;
   const ASPECT_RATIO = width / height;
 
-  const LATITUDE_DELTA = 0.1922;
+  const LATITUDE_DELTA = 0.2922;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   const currentDate = new Date();
   const currentDateString = currentDate.toDateString();
   const currentTimeString = currentDate.toLocaleTimeString();
   const [Stops, SetStops] = useState([]);
-  const [textdata,settextdata]=useState("Demo");
+  const [textdata, settextdata] = useState("Demo");
   useEffect(() => {
     requestLocationPermission();
   }, []);
-const SpeedUpload=(speed)=>{
+  const SpeedUpload = (speed) => {
 
 
-  let config = {
-    method: 'post',
-    maxBodyLength: Infinity,
-    url: `https://stsu.herokuapp.com/Admin/Over_Speed?email=${driver_email}&speed=${speed}`,
-    headers: { }
-  };
-  
-  axios.request(config)
-  .then((response) => {
-    console.log(JSON.stringify(response.data));
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-}
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `https://stsu.herokuapp.com/Admin/Over_Speed?email=${driver_email}&speed=${speed}`,
+      headers: {}
+    };
+
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
 
 
@@ -100,7 +100,7 @@ const SpeedUpload=(speed)=>{
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
-        const {latitude, longitude} = position.coords;
+        const { latitude, longitude } = position.coords;
         // setCurrentLocation({ latitude, longitude });
         // console.log('hi ', latitude, longitude);
 
@@ -109,7 +109,7 @@ const SpeedUpload=(speed)=>{
       error => {
         console.error('Error:', error);
       },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   };
 
@@ -155,7 +155,7 @@ const SpeedUpload=(speed)=>{
       .request(config)
       .then(response => {
         setcoordinates(response.data.message[0].destination);
-        if (response.data.message[0].destination[0].latitude>=response.data.message[0].destination[0].latitude&&response.data.message[0].destination[0].latitude<=response.data.message[0].destination[0].latitude+100) {
+        if (response.data.message[0].destination[0].latitude >= response.data.message[0].destination[0].latitude && response.data.message[0].destination[0].latitude <= response.data.message[0].destination[0].latitude + 100) {
           console.log(response.data.message[0].destination[0].latitude);
           loadFlagValue();
         }
@@ -191,60 +191,60 @@ const SpeedUpload=(speed)=>{
   // }, 8000);
   const toggleFlag2 = async (val) => {
     try {
-    
+
       await AsyncStorage.setItem('flag', JSON.stringify(val));
     } catch (error) {
       console.error('Error toggling flag2 value:', error);
     }
   };
-  const Dispach=()=>{
+  const Dispach = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
       url: `http://stsu.herokuapp.com/Admin/Dispatch?email=${driver_email}`,
-      headers: { }
+      headers: {}
     };
-    
+
     axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
-  const Arival=()=>{
+  const Arival = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
       url: `http://stsu.herokuapp.com/Admin/Update_Arival?email=${driver_email}`,
-      headers: { }
+      headers: {}
     };
-    
+
     axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
   const loadFlagValue = async () => {
     try {
       const value = await AsyncStorage.getItem('flag');
       console.log(typeof value);
-      if (value=="true") {
+      if (value == "true") {
         // settextdata("Arival TIme");
         Arival();
         toggleFlag2(false)
         // setIsFlagSet(JSON.parse(value));
-      }else{
+      } else {
         // settextdata("Despacture");
         Dispach();
 
         setTimeout(() => {
           toggleFlag2(true);
-          
+
         }, 120000);
       }
     } catch (error) {
@@ -274,42 +274,47 @@ const SpeedUpload=(speed)=>{
         <>
           <MapView
             initialRegion={{
-              latitude: LATITUDE,
-              longitude: LONGITUDE,
+              latitude: coordinates[1].latitude,
+              longitude: coordinates[1].longitude,
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
             style={StyleSheet.absoluteFill}
+            // transform={[{ rotate: '180deg' }, { scale: 1.2 }]} 
+            // rotate={190}
             ref={mapViewRef}
             // zoomEnabled={false}
-            maxZoomLevel={15}>
+            maxZoomLevel={100}>
             {coordinates.length > 0 && (
               <MapViewDirections
-                origin={coordinates[0]}
+              origin={coordinates[0]}
+              destination={coordinates[1]}
                 waypoints={
-                  coordinates.length > 2 ? coordinates.slice(1, -1) : undefined
+                  coordinates.length > 2 ? coordinates.slice(1) : undefined
                 }
-                destination={coordinates[coordinates.length - 1]}
+                resetOnChange={false} // Disable resetting on coordinate changes
+                // directionsServiceBaseUrl={`https://maps.googleapis.com/maps/api/directions/json?heading=${YOUR_CUSTOM_HEADING}&`}
                 apikey={GOOGLE_MAPS_APIKEY}
                 strokeWidth={3}
                 strokeColor="blue"
-                optimizeWaypoints={true}
+                transitOptions
+                // optimizeWaypoints={true}
                 onStart={params => {
                   // console.log(
                   //   `Started routing between "${params.origin}" and "${params.destination}"`,
                   // );
                 }}
                 onReady={result => {
-                   console.log(`Speed: ${result.fares}`);
+                  console.log(`Speed: ${result.fares}`);
                   console.log(`Distance: ${result.distance} km`);
 
                   const speed =
                     (result.distance * 1000) / (result.duration * 60);
                   // if (speed >= 30 ) {
-                    console.log(speed,"MeterPerSecond");
-                    SpeedUpload(speed)
+                  console.log(speed, "MeterPerSecond");
+                  SpeedUpload(speed)
                   // } else{
-                    // null;
+                  // null;
                   // }
                   // console.log(`Duration: ${result.duration} min.`);
                   mapViewRef.current.fitToCoordinates(result.coordinates, {
@@ -318,43 +323,49 @@ const SpeedUpload=(speed)=>{
                       bottom: height / 20,
                       left: width / 20,
                       top: height / 20,
+          //               top: 100, // Adjust this value to position the origin location at the top
+          // bottom: 200, // Adjust this value to position the destination location at the bottom
+          // left: 150,
+          // right: 150,
+          // route:10
                     },
                   });
                 }}
                 onError={errorMessage => {
                   console.log('GOT AN ERROR');
                 }}
+                
               />
             )}
             <Marker
               key={`Initial `}
-              coordinate={coordinates[1]}
+              coordinate={coordinates[0]}
               title={`Destination`}
             >
-                            <Image
-          source={require('../assest/Bus.png')}
-          style={{ width: 40, height: 40 }}
-        />
-              </Marker>
+              <Image
+                source={require('../assest/Bus.png')}
+                style={{ width: 40, height: 40 }}
+              />
+            </Marker>
 
             <Marker
               key={`Destination`}
-              coordinate={coordinates[0]}
+              coordinate={coordinates[1]}
               title={`Destination $`}
               pinColor="#FF0000"
             />
-                   {Stops.map((item, index) => (
+            {Stops.map((item, index) => (
               <Marker
                 key={`Stop ${index}`}
                 coordinate={Stops[index]}
                 title={`Stop ${index + 1}`}
                 pinColor="orange"
               >
-                      <Image
-          source={require('../assest/Stops.png')}
-          style={{ width: 40, height: 40 }}
-        />
-    </Marker>
+                <Image
+                  source={require('../assest/Stops.png')}
+                  style={{ width: 40, height: 40 }}
+                />
+              </Marker>
             ))}
             {/* {Student.map(index => ( */}
             {Student.map((item, index) => (
@@ -367,10 +378,7 @@ const SpeedUpload=(speed)=>{
             ))}
             {/* // ))} */}
           </MapView>
-          {/* <View>
-            <Text>{textdata}</Text>
-            <Text>{coordinates[0].latitude}</Text>
-          </View> */}
+       
         </>
       )}
     </View>
@@ -386,6 +394,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+    transform: [{ rotate: '190deg' }],
   },
 });
 
