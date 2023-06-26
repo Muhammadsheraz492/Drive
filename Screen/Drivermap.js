@@ -185,10 +185,10 @@ const Example = ({ route }) => {
         console.log(error.response);
       });
   };
-  // setTimeout(() => {
-  //   console.log('hello');
-  //   GetData();
-  // }, 8000);
+  setTimeout(() => {
+    // console.log('hello');
+    GetData();
+  }, 8000);
   const toggleFlag2 = async (val) => {
     try {
 
