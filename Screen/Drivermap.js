@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -8,28 +8,28 @@ import {
   Text,
   TouchableOpacity,
   PermissionsAndroid,
-  Image
+  Image,
 } from 'react-native';
 import url from '../url.json';
 
-import MapView, { Marker } from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC-at3-WlccF6DEkDd3U0MEn9CUraQwqXw';
 
-const Example = ({ route }) => {
+const Example = ({route}) => {
   const mapViewRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [checkclick, setcheckclick] = useState(false);
   const [coordinates, setcoordinates] = useState([]);
   const [Student, setStudent] = useState([]);
   const [status, setstatus] = useState(false);
-  const { driver_email, student_email } = route.params;
+  const {driver_email, student_email} = route.params;
   const LATITUDE = 54.23;
-  const LONGITUDE = .33;
+  const LONGITUDE = 0.33;
   const ASPECT_RATIO = width / height;
 
   const LATITUDE_DELTA = 0.2922;
@@ -38,31 +38,61 @@ const Example = ({ route }) => {
   const currentDateString = currentDate.toDateString();
   const currentTimeString = currentDate.toLocaleTimeString();
   const [Stops, SetStops] = useState([]);
-  const [textdata, settextdata] = useState("Demo");
+  const [textdata, settextdata] = useState('Demo');
+  const [Speed, SetSpeed] = useState('');
+
   useEffect(() => {
     requestLocationPermission();
   }, []);
-  const SpeedUpload = (speed) => {
-
-
+  const SpeedUpload = speed => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
       url: `https://stsu.herokuapp.com/Admin/Over_Speed?email=${driver_email}&speed=${speed}`,
-      headers: {}
+      headers: {},
     };
 
-    axios.request(config)
-      .then((response) => {
+    axios
+      .request(config)
+      .then(response => {
         console.log(JSON.stringify(response.data));
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
-  }
+  };
 
+  useEffect(() => {
+    // Request location permission if needed
+    Geolocation.requestAuthorization('whenInUse');
 
+    // Start listening for location updates
+    const watchId = Geolocation.watchPosition(
+      position => {
+        // Check if the position has speed information
+        if (position.coords.speed !== null) {
+          const speed = (position.coords.speed.toFixed(2) * 4.3).toFixed(2);
+          if(speed>=60){
+            SpeedUpload(speed);
 
+          }
+          console.log('Current speed: ' + speed + ' meters per second');
+          SetSpeed(speed);
+        } else {
+          console.log('Speed information is not available.');
+        }
+      },
+      error => {
+        console.log('Error getting location: ' + error.message);
+      },
+      {enableHighAccuracy: true, distanceFilter: 10},
+    );
+
+    // Clean up the watchId when the component unmounts
+    return () => {
+      Geolocation.clearWatch(watchId);
+    };
+  }, []);
 
   const requestLocationPermission = async () => {
     try {
@@ -100,7 +130,7 @@ const Example = ({ route }) => {
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
-        const { latitude, longitude } = position.coords;
+        const {latitude, longitude} = position.coords;
         // setCurrentLocation({ latitude, longitude });
         // console.log('hi ', latitude, longitude);
 
@@ -109,7 +139,7 @@ const Example = ({ route }) => {
       error => {
         console.error('Error:', error);
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
 
@@ -155,7 +185,12 @@ const Example = ({ route }) => {
       .request(config)
       .then(response => {
         setcoordinates(response.data.message[0].destination);
-        if (response.data.message[0].destination[0].latitude >= response.data.message[0].destination[0].latitude && response.data.message[0].destination[0].latitude <= response.data.message[0].destination[0].latitude + 100) {
+        if (
+          response.data.message[0].destination[0].latitude >=
+            response.data.message[0].destination[0].latitude &&
+          response.data.message[0].destination[0].latitude <=
+            response.data.message[0].destination[0].latitude + 100
+        ) {
           console.log(response.data.message[0].destination[0].latitude);
           loadFlagValue();
         }
@@ -185,13 +220,13 @@ const Example = ({ route }) => {
         console.log(error.response);
       });
   };
-  setTimeout(() => {
-    // console.log('hello');
-    GetData();
-  }, 8000);
-  const toggleFlag2 = async (val) => {
+  // setTimeout(() => {
+  //   console.log('hello');
+  //   GetData();
+  // }, 8000);
+  const toggleFlag2 = async val => {
+    console.log(val+"  JSon");
     try {
-
       await AsyncStorage.setItem('flag', JSON.stringify(val));
     } catch (error) {
       console.error('Error toggling flag2 value:', error);
@@ -202,41 +237,46 @@ const Example = ({ route }) => {
       method: 'post',
       maxBodyLength: Infinity,
       url: `http://stsu.herokuapp.com/Admin/Dispatch?email=${driver_email}`,
-      headers: {}
+      headers: {},
     };
 
-    axios.request(config)
-      .then((response) => {
+    axios
+      .request(config)
+      .then(response => {
         console.log(JSON.stringify(response.data));
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
-  }
+  };
   const Arival = () => {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
       url: `http://stsu.herokuapp.com/Admin/Update_Arival?email=${driver_email}`,
-      headers: {}
+      headers: {},
     };
 
-    axios.request(config)
-      .then((response) => {
+    axios
+      .request(config)
+      .then(response => {
         console.log(JSON.stringify(response.data));
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
-  }
+  };
   const loadFlagValue = async () => {
+    console.log("Load Value");
     try {
       const value = await AsyncStorage.getItem('flag');
-      console.log(typeof value);
-      if (value == "true") {
+      console.log("Value Trtue", value);
+
+      if (value == 'true') {
         // settextdata("Arival TIme");
+        console.log("Arival");
         Arival();
-        toggleFlag2(false)
+        toggleFlag2(false);
         // setIsFlagSet(JSON.parse(value));
       } else {
         // settextdata("Despacture");
@@ -244,7 +284,6 @@ const Example = ({ route }) => {
 
         setTimeout(() => {
           toggleFlag2(true);
-
         }, 120000);
       }
     } catch (error) {
@@ -264,6 +303,7 @@ const Example = ({ route }) => {
       clearInterval(interval);
     };
   }, []);
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -272,6 +312,28 @@ const Example = ({ route }) => {
         </View>
       ) : (
         <>
+          <View
+            style={{
+              position: 'absolute',
+              right: 0,
+              width: '20%',
+              height: 40,
+              borderRadius: 10,
+              top: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#fff',
+              zIndex: 1,
+            }}>
+            <Text
+              style={{
+                fontSize: 16,
+                color: '#000000',
+              }}>
+              {Speed}
+            </Text>
+          </View>
+
           <MapView
             initialRegion={{
               latitude: coordinates[1].latitude,
@@ -280,15 +342,15 @@ const Example = ({ route }) => {
               longitudeDelta: LONGITUDE_DELTA,
             }}
             style={StyleSheet.absoluteFill}
-            // transform={[{ rotate: '180deg' }, { scale: 1.2 }]} 
+            // transform={[{ rotate: '180deg' }, { scale: 1.2 }]}
             // rotate={190}
             ref={mapViewRef}
             // zoomEnabled={false}
             maxZoomLevel={100}>
             {coordinates.length > 0 && (
               <MapViewDirections
-              origin={coordinates[0]}
-              destination={coordinates[1]}
+                origin={coordinates[0]}
+                destination={coordinates[1]}
                 waypoints={
                   coordinates.length > 2 ? coordinates.slice(1) : undefined
                 }
@@ -308,11 +370,9 @@ const Example = ({ route }) => {
                   console.log(`Speed: ${result.fares}`);
                   console.log(`Distance: ${result.distance} km`);
 
-                  const speed =
-                    (result.distance * 1000) / (result.duration * 60);
                   // if (speed >= 30 ) {
-                  console.log(speed, "MeterPerSecond");
-                  SpeedUpload(speed)
+                  // console.log(speed, "MeterPerSecond");
+                  // SpeedUpload(speed)
                   // } else{
                   // null;
                   // }
@@ -323,28 +383,26 @@ const Example = ({ route }) => {
                       bottom: height / 20,
                       left: width / 20,
                       top: height / 20,
-          //               top: 100, // Adjust this value to position the origin location at the top
-          // bottom: 200, // Adjust this value to position the destination location at the bottom
-          // left: 150,
-          // right: 150,
-          // route:10
+                      //               top: 100, // Adjust this value to position the origin location at the top
+                      // bottom: 200, // Adjust this value to position the destination location at the bottom
+                      // left: 150,
+                      // right: 150,
+                      // route:10
                     },
                   });
                 }}
                 onError={errorMessage => {
                   console.log('GOT AN ERROR');
                 }}
-                
               />
             )}
             <Marker
               key={`Initial `}
               coordinate={coordinates[0]}
-              title={`Destination`}
-            >
+              title={`Destination`}>
               <Image
                 source={require('../assest/Bus.png')}
-                style={{ width: 40, height: 40 }}
+                style={{width: 40, height: 40}}
               />
             </Marker>
 
@@ -359,11 +417,10 @@ const Example = ({ route }) => {
                 key={`Stop ${index}`}
                 coordinate={Stops[index]}
                 title={`Stop ${index + 1}`}
-                pinColor="orange"
-              >
+                pinColor="orange">
                 <Image
                   source={require('../assest/Stops.png')}
-                  style={{ width: 40, height: 40 }}
+                  style={{width: 40, height: 40}}
                 />
               </Marker>
             ))}
@@ -378,7 +435,6 @@ const Example = ({ route }) => {
             ))}
             {/* // ))} */}
           </MapView>
-       
         </>
       )}
     </View>
@@ -397,7 +453,7 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-    transform: [{ rotate: '190deg' }],
+    transform: [{rotate: '190deg'}],
   },
 });
 
