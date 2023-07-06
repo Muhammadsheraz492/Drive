@@ -233,6 +233,8 @@ const Drivermap = ({route}) => {
                   // console.log('GOT AN ERROR');
                 }}
               />
+
+              // 
             )}
             <Marker
               key={`Initial `}
